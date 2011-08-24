@@ -32,7 +32,7 @@ function buildPlayer( sprites )
 	var gfx = new TileGraphic( "img/dood-walk.png", 1, 24 );
 	gfx.setBoarder( 1 );	
 
-	player = new TileSprite( gfx );
+	player = new TileSprite( gfx, new MovePolicy_snap() );
 	player.addRun( front );
 	player.addRun( back );
 	player.addRun( left );

@@ -42,11 +42,10 @@ function update()
 	for( i=0; i<sprites.length; ++i )
 	{
 		var render = 0;
-		sprites[i].update( 33.3 ); // aprox
-
-		 
 		rect = sprites[i].getBounds();
-		if( sprites[i].isMoving() || sprites[i].isDirty() )
+		sprites[i].update( 33.3 ); // aprox
+		
+		if( sprites[i].isDirty() )
 		{
 			idx = map.pointToTileIdxVP( rect.x, rect.y );
 			map.setDirty( idx );
@@ -76,7 +75,7 @@ function update()
 	map.draw( context )
 	for( i=0; i<sprites.length; ++i )	 
 	{
-		if( sprites[i].isMoving() || sprites[i].isDirty() )
+		if( sprites[i].isDirty() )
 		{
 			sprites[i].draw( context );
 		}
