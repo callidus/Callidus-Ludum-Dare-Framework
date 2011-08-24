@@ -1,14 +1,7 @@
-// ---------------------------------------------------------------------
-// an animation data struct
-// ---------------------------------------------------------------------
-function TileAnimationRun()
-{
-	this.first = 0;
-	this.frame = 0;
-	this.last = 0;
-	this.fps = 30;
-	this.loop = 1;
-}
+
+
+//######################################################################
+//# Movement policy objects
 
 // ---------------------------------------------------------------------
 // move policy - slide from tile to tile over time
@@ -87,23 +80,136 @@ function MovePolicy_snap()
 	}
 }
 
+//######################################################################
+//# Animation policy objects
+
+// ---------------------------------------------------------------------
+// an animation data struct
+// ---------------------------------------------------------------------
+function TileAnimationRun()
+{
+	this.first = 0;
+	this.frame = 0;
+	this.last = 0;
+	this.fps = 30;
+	this.loop = 1;
+	this.sound = null;
+}
+
+// ---------------------------------------------------------------------
+// an animation policy that does nothing
+// ---------------------------------------------------------------------
+function AnimPolicy_null()
+{
+	this.dirty = false;
+	
+	this.addRun = function( run )
+	{
+	}
+	
+	this.setRun = function( idx )
+	{
+		this.dirty = true
+	}
+	
+	this.getFrame = function()
+	{
+		return 0;
+	}
+	
+	this.update = function( delta )
+	{
+		if( this.dirty )
+		{
+			this.dirty = false;
+			return true;
+		}
+		return false;
+	}
+}
+
+// ---------------------------------------------------------------------
+// an animation policy 
+// ---------------------------------------------------------------------
+function AnimPolicy_basic()
+{
+	this.dirty = false;
+	this.delta = 0.0;
+	this.runNow = 0;
+	this.runs = new Array();
+	
+	this.addRun = function( run )
+	{
+		run.frame = run.first;
+		this.runs.push( run )
+	}
+	
+	this.setRun = function( idx )
+	{
+		this.runs[idx].frame = this.runs[idx].first;
+		this.runNow = idx;
+		this.dirty = true;
+	}
+	
+	this.getFrame = function()
+	{
+		return this.runs[this.runNow].frame;
+	}
+	
+	this.update = function( delta )
+	{
+		if( this.runs.length )
+		{
+			this.delta += delta;
+			var run = this.runs[this.runNow];
+			if( this.delta >= ( 1000.0 / run.fps ) )
+			{
+				this.delta = 0.0;
+				if( run.frame == run.last )
+				{
+					if( run.loop )
+					{
+						run.frame = run.first;
+					}
+				}
+				else
+				{
+					run.frame++;
+					if( run.sound != null )
+					{
+						run.sound.play();
+					}
+				}
+				
+				this.dirty = false;
+				return true;
+			}
+		}
+		
+		if( this.dirty )
+		{
+			this.dirty = false;
+			return true
+		}
+		return false;
+	}
+}
+
+//######################################################################
+//# A sprite object
 
 // ---------------------------------------------------------------------
 // a tile sprite, it can move and animate
 // ---------------------------------------------------------------------
-function TileSprite( gfx, move )
+function TileSprite( gfx, move, anim )
 {
 	this.gfx = gfx;
-	this.runNum = 0;
-	this.runNow = 0;
 	this.dirty = 0;
 	
+	this.anim = anim;
+	this.move = move;
 	this.pos = new Point2D( 0, 0 );
 	this.speed = 0.5;
-	
-	this.runs = new Array();
-	this.animDelta = 0.0;
-	this.moveDelta = 0.0;
 	
 	this.isDirty = function()
 	{
@@ -115,9 +221,6 @@ function TileSprite( gfx, move )
 		this.pos = pos
 	}
 	
-	// moving stuff
-	this.move = move;
-	
 	this.isMoving = function()
 	{
 		return this.move.isMoving();
@@ -128,54 +231,20 @@ function TileSprite( gfx, move )
 		this.move.setMove( this.pos, targ );
 	}
 	
-	this.addRun = function( run )
+	this.addAnimRun = function( run )
 	{
-		run.frame = run.first
-		this.runs[ this.runNum ] = run
-		this.runNum++;
+		this.anim.addRun( run );
 	}
 	
-	this.setRun = function( idx )
+	this.setAnimRun = function( idx )
 	{
-		this.runNow = idx;
-		this.runs[idx].frame = this.runs[idx].first;
-		this.animDelta = 0.0;
+		this.anim.setRun( idx )
 	}
-	
-	var snd = new Audio("snd/step.wav");
-	snd.volume = 0.1;
 	
 	this.update = function( delta )
 	{
-		// anim stuff
-		if( this.runNum )
-		{
-			this.animDelta += delta;
-			this.moveDelta += delta;
-			
-			var run = this.runs[ this.runNow ];
-			if( this.animDelta >= ( 1000.0 / run.fps ) )
-			{
-				this.animDelta = 0.0;
-				if( run.frame == run.last )
-				{
-					if( run.loop )
-					{
-						run.frame = run.first;
-					}
-				}
-				else
-				{
-					run.frame++;
-					
-					snd.play();
-				}
-				
-				this.dirty = 1;
-			}
-		}
+		this.dirty = ( this.anim.update( delta ) || this.dirty );
 		
-		// move stuff
 		if( this.move.isMoving() )
 		{			
 			this.move.update( delta, this.pos, this.speed );
@@ -195,7 +264,7 @@ function TileSprite( gfx, move )
 	
 	this.draw = function( ctx )
 	{
-		this.gfx.draw( ctx, this.pos.x,this.pos.y, this.runs[ this.runNow ].frame );
+		this.gfx.draw( ctx, this.pos.x,this.pos.y, this.anim.getFrame() );
 		this.dirty = 0;
 	}
 }

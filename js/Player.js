@@ -4,40 +4,47 @@
 // ---------------------------------------------------------------------
 var player = null;
 function buildPlayer( sprites )
-{		
+{
+	var snd = new Audio("snd/step.wav");
+	snd.volume = 0.1;
+			
 	var front = new TileAnimationRun();
 	front.first = 3;
 	front.last = 7;
 	front.fps = 8;	
 	front.loop = 0;
+	front.sound = snd;
 	
 	var back = new TileAnimationRun();
 	back.first = 18;
 	back.last = 22;
 	back.fps = 8;	
 	back.loop = 0;
+	back.sound = snd;
 	
 	var left = new TileAnimationRun();
 	left.first = 8;
 	left.last = 12;
 	left.fps = 8;	
 	left.loop = 0;
+	left.sound = snd;
 	
 	var right = new TileAnimationRun();
 	right.first = 13;
 	right.last = 17;
 	right.fps = 8;	
 	right.loop = 0;
+	right.sound = snd;
 	
 	var gfx = new TileGraphic( "img/dood-walk.png", 1, 24 );
 	gfx.setBoarder( 1 );	
 
-	player = new TileSprite( gfx, new MovePolicy_snap() );
-	player.addRun( front );
-	player.addRun( back );
-	player.addRun( left );
-	player.addRun( right );
-	player.setRun( 0 );	
+	player = new TileSprite( gfx, new MovePolicy_slide(), new AnimPolicy_basic() );
+	player.addAnimRun( front );
+	player.addAnimRun( back );
+	player.addAnimRun( left );
+	player.addAnimRun( right );
+	player.setAnimRun( 0 );	
 	player.speed = 95;
 	
 	// ----------------------------------------------------------------
@@ -113,7 +120,7 @@ function handleKeyPress( event )
 			targ.x = player.pos.x;
 			targ.y = player.pos.y - tH;
 			
-			player.setRun( 1 );	
+			player.setAnimRun( 1 );	
 			break;
 		
 		case "a":
@@ -131,7 +138,7 @@ function handleKeyPress( event )
 			targ.x = player.pos.x - tW;
 			targ.y = player.pos.y;
 			
-			player.setRun( 2 );	
+			player.setAnimRun( 2 );	
 			break;
 		
 		case "s":
@@ -150,7 +157,7 @@ function handleKeyPress( event )
 			targ.x = player.pos.x;
 			targ.y = player.pos.y + tH;
 			
-			player.setRun( 0 );	
+			player.setAnimRun( 0 );	
 			break;
 		
 		case "d":
@@ -169,7 +176,7 @@ function handleKeyPress( event )
 			targ.x = player.pos.x + tW;
 			targ.y = player.pos.y;
 			
-			player.setRun( 3 );	
+			player.setAnimRun( 3 );	
 			break;
 	};
 	
