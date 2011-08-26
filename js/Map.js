@@ -63,6 +63,21 @@ function TileMap( tileGfx, w, h )
 		this.dirtyFlags[idx] = 1;
 	}
 	
+	this.setDirtyRectPx = function( rect )
+	{
+		idx = this.pointToTileIdxVP( rect.x, rect.y );
+		this.dirtyFlags[idx] = 1;
+
+		idx = this.pointToTileIdxVP( rect.x + rect.w, rect.y );
+		this.dirtyFlags[idx] = 1;
+
+		idx = this.pointToTileIdxVP( rect.x, rect.y + rect.h );
+		this.dirtyFlags[idx] = 1;
+
+		idx = this.pointToTileIdxVP( rect.x + rect.w, rect.y + rect.h );
+		this.dirtyFlags[idx] = 1;
+	}
+	
 	
 	// get a tile idx from a 2D point on the map
 	this.pointToTileIdx = function( x, y )
@@ -123,7 +138,6 @@ function TileMap( tileGfx, w, h )
 		{
 			y = 0;
 		}
-
 		
 		if( x == 0 && y == 0 )
 		{

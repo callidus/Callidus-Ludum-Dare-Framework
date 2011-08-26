@@ -216,6 +216,11 @@ function TileSprite( gfx, move, anim )
 		return this.dirty;
 	}
 	
+	this.clearDirty = function()
+	{
+		this.dirty = 0;
+	}
+	
 	this.setPosition = function( pos )
 	{
 		this.pos = pos

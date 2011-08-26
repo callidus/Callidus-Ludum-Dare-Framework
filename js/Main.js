@@ -33,35 +33,18 @@ function init()
 }
 
 function update()
-{
-	for( j=0; j<sfxData.length; ++j )
-	{
-		sfxData[j].update();
-	}
-	
+{	
 	for( i=0; i<sprites.length; ++i )
 	{
 		var render = 0;
 		rect = sprites[i].getBounds();
 		sprites[i].update( 33.3 ); // aprox
-		
-		if( sprites[i].isDirty() )
-		{
-			idx = map.pointToTileIdxVP( rect.x, rect.y );
-			map.setDirty( idx );
 
-			idx = map.pointToTileIdxVP( rect.x + rect.w, rect.y );
-			map.setDirty( idx );
-			 
-			idx = map.pointToTileIdxVP( rect.x, rect.y + rect.h );
-			map.setDirty( idx );
-			 
-			idx = map.pointToTileIdxVP( rect.x + rect.w, rect.y + rect.h );
-			map.setDirty( idx );
-		}
-		else
+		// - dont like this --------------------------------------------
+		if( !sprites[i].isMoving() )
 		{
-			idx = map.pointToTileIdxVP( rect.x, rect.y );
+			var rect2 = sprites[i].getBounds();
+			idx = map.pointToTileIdxVP( rect2.x, rect2.y );
 			for( j=0; j<sfxData.length; ++j )
 			{
 				if( sfxData[j].idx == idx )
@@ -70,20 +53,29 @@ function update()
 				}
 			}
 		}
+		// -------------------------------------------------------------
+		
+		if( true ) // sprite visibility test
+		{			
+			if( sprites[i].isDirty() )
+			{
+				map.setDirtyRectPx( rect );
+			}
+		}
+		else
+		{
+			sprites[i].clearDirty();
+		}
 	}
 	
-	map.draw( context )
+	map.draw( context );
+	
 	for( i=0; i<sprites.length; ++i )	 
 	{
 		if( sprites[i].isDirty() )
 		{
 			sprites[i].draw( context );
 		}
-	}
-	
-	for( j=0; j<sfxData.length; ++j )
-	{
-		sfxData[j].commit();
 	}
 }
 
@@ -110,13 +102,6 @@ function handleClickRelative( event, elem )
     
     //sprites[ 0 ].setMoveTo( new Point2D( tX, tY ) ); 
 }
-
-
-function imagesLoaded()
-{    
-     document.location.href='index2.html';
-}
-
 
 
 
