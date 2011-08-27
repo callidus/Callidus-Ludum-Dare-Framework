@@ -10,24 +10,19 @@ var LVL_MAX = 3;
 // ---------------------------------------------------------------------
 function TileMap( tileGfx, w, h )
 {	
+	this.viewPort = new Rect2D( 0, 0, 0, 0 );
 	this.width = w;
 	this.height = h;
 	
-	this.pxWidth = tileGfx.tileW * w
-	this.pxHeight = tileGfx.tileH * h
-	
+	this.gfx = tileGfx;
 	this.tileData = new Array();
 	for( i=0; i<LVL_MAX; ++i )
 	{
 		this.tileData[i] = null;
 	}
 	
-	this.tileData
-	this.tileGfx = tileGfx;
-	
 	this.dirtyFlags = new Array();
-	this.viewPort = new Rect2D();
-	
+
 	// what to draw
 	this.setData = function( data )
 	{
@@ -38,69 +33,43 @@ function TileMap( tileGfx, w, h )
 		this.refresh();
 	}
 	
-	this.setViewport = function( w, h )
+	this.setViewPortRect = function( rect )
 	{
-		this.viewW = w;
-		this.viewY = y;
+		this.viewPort.setRect( rect );
 	}
 	
 	// refresh
 	this.refresh = function()
 	{
-		var idx = 0;
-		for( i=0; i<this.height; ++i )
+		for( i=0; i<this.tileData[LVL_GFX].length; ++i )
 		{
-			for( j=0; j<this.width; ++j )
-			{
-				this.dirtyFlags[ i * this.width + j ] = 1;
-			}
+			this.dirtyFlags[i] = 1;
 		}
 	}
 	
 	// dirty
-	this.setDirty = function( idx )
+	this.setDirtyIdx = function( idx )
 	{
 		this.dirtyFlags[idx] = 1;
 	}
 	
-	
-	// get a tile idx from a 2D point on the map
-	this.pointToTileIdx = function( x, y )
+	// dirty in a rect
+	this.setDirtyRect = function( rect )
 	{
-		var tX = Math.floor( x / this.tileGfx.tileW );
-		var tY = Math.floor( y / this.tileGfx.tileH );
-		return w * tY + tX;
-	}
-	
-	
-	// get a tile idx from a 2D point on the map, take into account scrolling
-	this.pointToTileIdxVP = function( x, y )
-	{
-		var tX = Math.floor( ( x + this.viewPort.x * this.tileGfx.tileW ) / this.tileGfx.tileW );
-		var tY = Math.floor( ( y + this.viewPort.y * this.tileGfx.tileH ) / this.tileGfx.tileH );
-		return w * tY + tX;
-	}
-	
-	
-	// get a point ( rect ) in 2D space from a tile idx 
-	this.tileIdxToPoint = function( idx )
-	{
-		var rect = new Rect2D();
-		var tX = Math.floor( idx % this.pxWidth );
-		var tY = Math.floor( idx / this.pxWidth );
+		var tX;
+		var tY;
+		var idx;
 		
-		rect.x = tX * this.tileGfx.tileW;
-		rect.y = tY * this.tileGfx.tileH;
-		rect.w = this.tileGfx.tileW;
-		rect.h = this.tileGfx.tileH;
-		
-		return rect;
-	}
-	
-	// setup a veiw port onto the map
-	this.setViewPort = function( rect )
-	{
-		this.viewPort = rect;
+		tY = rect.getY() + rect.h;
+		for( j=rect.getY(); j<tY; ++j )
+		{
+			tX = rect.getX() + rect.w;
+			for( i=rect.getX(); i<tX; ++i )
+			{
+				idx = j * this.width + i;
+				this.dirtyFlags[ idx ] = 1;
+			}
+		}
 	}
 	
 	// scroll the view port 
@@ -111,67 +80,54 @@ function TileMap( tileGfx, w, h )
 		var tW;	
 		
 		// clamp X
-		tW = x + this.viewPort.x + this.viewPort.w;
-		if( tW > this.width || x + this.viewPort.x < 0 )
+		tW = x + this.viewPort.getX() + this.viewPort.w;
+		if( tW > this.width || x + this.viewPort.getX() < 0 )
 		{
 			x = 0;
 		}
 		
 		// clamp Y
-		tH = y + this.viewPort.y + this.viewPort.h;
-		if( tH > this.height || y + this.viewPort.y < 0 )
+		tH = y + this.viewPort.getY() + this.viewPort.h;
+		if( tH > this.height || y + this.viewPort.getY() < 0 )
 		{
 			y = 0;
 		}
-
 		
 		if( x == 0 && y == 0 )
 		{
 			return 0;
 		}
 		
-		this.viewPort.x += x;
-		this.viewPort.y += y;
-		
-		tH = this.viewPort.y + this.viewPort.h;
-		for( j=this.viewPort.y; j<tH; ++j )
-		{
-			tW = this.viewPort.x + this.viewPort.w;
-			for( i=this.viewPort.x; i<tW; ++i )
-			{
-				idx = j * this.width + i;
-				this.dirtyFlags[ idx ] = 1;
-			}
-		}
-		
+		this.viewPort.point.x += x;
+		this.viewPort.point.y += y;
+		this.setDirtyRect( this.viewPort );
 		return 1;
 	}
 	
-	// draw stuff, render the minimum number of tiles we have to
-	this.draw = function( ctx )
+	//
+	this.scrollToIndex = function( idx )
 	{
-		var tH;
-		var tW;
-		var idx;
+		var p = new Point2D( 0, 0 );
+		p.fromIdx( idx, this.width, this.height );
 		
-		idx = 0;
-		tH = this.viewPort.y + this.viewPort.h;
-		for( i=this.viewPort.y; i<tH; ++i )
+		this.viewPort.point.x = p.x - 1;
+		this.viewPort.point.y = p.y - 1;
+		this.setDirtyRect( this.viewPort );
+	}
+	
+	// is in viewport
+	this.isVisible = function( rect )
+	{
+		var p1 = rect.getPoint();
+		var p2 = rect.getExtent();
+		
+		// test
+		if( this.viewPort.contains( p1 ) || 
+			this.viewPort.contains( p2 ) )
 		{
-			tW = this.viewPort.x + this.viewPort.w;
-			for( j=this.viewPort.x; j<tW; ++j )
-			{
-				idx = i * this.width + j;
-				if( this.dirtyFlags[idx] )
-				{
-					this.dirtyFlags[idx] = 0;
-					this.tileGfx.draw( ctx, 
-										( j - this.viewPort.x ) * this.tileGfx.tileW,
-										( i - this.viewPort.y ) * this.tileGfx.tileH,
-										this.tileData[LVL_GFX][idx] );
-				}
-			}
+			return true;
 		}
+		return false;
 	}
 	
 	this.findSfx = function( idx, find )
@@ -186,24 +142,5 @@ function TileMap( tileGfx, w, h )
 		return null;
 	}
 	
-	this.scrollToIndex = function( idx )
-	{
-		var tX = Math.floor( idx % this.width );
-		var tY = Math.floor( idx / this.width );
-		this.viewPort.x = tX-1;
-		this.viewPort.y = tY-1;
-		
-		// factor out -------------------------------------------------
-		tY = this.viewPort.y + this.viewPort.h;
-		for( j=this.viewPort.y; j<tY; ++j )
-		{
-			tX = this.viewPort.x + this.viewPort.w;
-			for( i=this.viewPort.x; i<tX; ++i )
-			{
-				idx = j * this.width + i;
-				this.dirtyFlags[ idx ] = 1;
-			}
-		}
-		// ------------------------------------------------------------
-	}
+
 }

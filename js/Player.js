@@ -37,9 +37,9 @@ function buildPlayer( sprites )
 	right.sound = snd;
 	
 	var gfx = new TileGraphic( "img/dood-walk.png", 1, 24 );
-	gfx.setBoarder( 1 );	
+	//gfx.setBoarder( 1 );	
 
-	player = new TileSprite( gfx, new MovePolicy_slide(), new AnimPolicy_basic() );
+	player = new TileSprite( gfx );
 	player.addAnimRun( front );
 	player.addAnimRun( back );
 	player.addAnimRun( left );
@@ -62,14 +62,16 @@ function buildPlayer( sprites )
 	if( starts.length )
 	{
 		var strt = Math.floor( Math.random()*starts.length );
-		map.scrollToIndex( starts[strt].idx )
+		
+		var pnt = new Point2D( 0, 0 );
+		pnt.fromIdx( starts[strt].idx, map.width, map.height );
+		player.setPosition( pnt );
+		
+		pnt.x -= 1;
+		pnt.y -= 1;
+		viewPort.viewAt( pnt, map );
 	}
-	
-	player.pos.y = map.tileGfx.tileH;
-	player.pos.x = map.tileGfx.tileW;
 	// ----------------------------------------------------------------
-	
-	
 	
 	sprites[sprites.length] = player
 }
@@ -96,93 +98,67 @@ function handleKeyPress( event )
 		keychar = String.fromCharCode(key);
 	}
 	
-	var tA = 0;
-	var tB = 0;
-	var tW = map.tileGfx.tileW;
-	var tH = map.tileGfx.tileH;
-	var targ = new Point2D( 0, 0 );
-	var move = 0;
-	
+	var targ = new Point2D( 0, 0 );	
 	switch( keychar )
 	{
 		case "w":
-			tA = player.pos.y - tH;
-			if( tA < 0 )
-			{
-				break;
-			}
-			
 			move = 1;
-			if( tA == 0  && map.scrollViewPort( 0, -1 ) )
-			{
-				player.pos.y += tH;
-			}
-			targ.x = player.pos.x;
-			targ.y = player.pos.y - tH;
-			
+			targ.x = player.rect.getX();
+			targ.y = player.rect.getY() - 1;
 			player.setAnimRun( 1 );	
 			break;
 		
 		case "a":
-			tA = player.pos.x - tW;
-			if( tA < 0 )
-			{
-				break;
-			}
-			
 			move = 1;
-			if( tA == 0 && map.scrollViewPort( -1, 0 ) )
-			{
-				player.pos.x += tW;
-			}
-			targ.x = player.pos.x - tW;
-			targ.y = player.pos.y;
-			
+			targ.x = player.rect.getX() - 1;
+			targ.y = player.rect.getY();
 			player.setAnimRun( 2 );	
 			break;
 		
 		case "s":
-			tA = player.pos.y + tH;
-			tB = ( map.viewPort.h - 1 ) * tH;
-			if( tA > tB )
-			{
-				break;
-			}
-		
 			move = 1;
-			if( tA == tB && map.scrollViewPort( 0, +1 ) )
-			{
-				player.pos.y -= tH;
-			}
-			targ.x = player.pos.x;
-			targ.y = player.pos.y + tH;
-			
+			targ.x = player.rect.getX();
+			targ.y = player.rect.getY() + 1;
 			player.setAnimRun( 0 );	
 			break;
 		
 		case "d":
-			tA = player.pos.x + tW;
-			tB = ( map.viewPort.w - 1 ) * tW;
-			if( tA > tB )
-			{
-				break;
-			}
-			
 			move = 1;
-			if( tA == tB && map.scrollViewPort( 1, 0 ) )
-			{
-				player.pos.x -= tW;
-			}
-			targ.x = player.pos.x + tW;
-			targ.y = player.pos.y;
-			
+			targ.x = player.rect.getX() + 1;
+			targ.y = player.rect.getY();
 			player.setAnimRun( 3 );	
 			break;
 	};
 	
+	
+	if( !viewPort.rect.contains( targ ) )
+	{
+		move = 0; // cant move outside of vp
+	}
+	
+	if( targ.x == viewPort.rect.getX() )
+	{
+		viewPort.scrollBy( new Point2D( -1, 0 ) );
+	}
+	
+	if( targ.x == viewPort.rect.getX() + viewPort.rect.w - 1 )
+	{
+		viewPort.scrollBy( new Point2D( 1, 0 ) );
+	}
+	
+	if( targ.y == viewPort.rect.getY() )
+	{
+		viewPort.scrollBy( new Point2D( 0, -1 ) );
+	}
+	
+	if( targ.y == viewPort.rect.getY() + viewPort.rect.h - 1 )
+	{
+		viewPort.scrollBy( new Point2D( 0, 1 ) );
+	}
+	
 	if( move )
 	{
-		var idx = map.pointToTileIdxVP( targ.x, targ.y );
+		var idx = targ.asIdx( map.width, map.height );
 		var tile = map.tileData[LVL_PHY][idx];
 		if( this.canPass( tile ) )
 		{
