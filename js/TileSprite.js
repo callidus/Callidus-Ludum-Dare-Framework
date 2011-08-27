@@ -92,6 +92,11 @@ function TileSprite( gfx, move, anim )
 		return this.runs[this.runNow].frame;
 	}
 	
+	this.clearDirty = function()
+	{
+		this.dirty = 0;
+	}
+	
 	this.setPosition = function( pos )
 	{
 		this.rect.point.x = pos.x;

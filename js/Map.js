@@ -53,8 +53,47 @@ function TileMap( tileGfx, w, h )
 		this.dirtyFlags[idx] = 1;
 	}
 	
+<<<<<<< HEAD
 	// dirty in a rect
 	this.setDirtyRect = function( rect )
+=======
+	this.setDirtyRectPx = function( rect )
+	{
+		idx = this.pointToTileIdxVP( rect.x, rect.y );
+		this.dirtyFlags[idx] = 1;
+
+		idx = this.pointToTileIdxVP( rect.x + rect.w, rect.y );
+		this.dirtyFlags[idx] = 1;
+
+		idx = this.pointToTileIdxVP( rect.x, rect.y + rect.h );
+		this.dirtyFlags[idx] = 1;
+
+		idx = this.pointToTileIdxVP( rect.x + rect.w, rect.y + rect.h );
+		this.dirtyFlags[idx] = 1;
+	}
+	
+	
+	// get a tile idx from a 2D point on the map
+	this.pointToTileIdx = function( x, y )
+	{
+		var tX = Math.floor( x / this.tileGfx.tileW );
+		var tY = Math.floor( y / this.tileGfx.tileH );
+		return w * tY + tX;
+	}
+	
+	
+	// get a tile idx from a 2D point on the map, take into account scrolling
+	this.pointToTileIdxVP = function( x, y )
+	{
+		var tX = Math.floor( ( x + this.viewPort.x * this.tileGfx.tileW ) / this.tileGfx.tileW );
+		var tY = Math.floor( ( y + this.viewPort.y * this.tileGfx.tileH ) / this.tileGfx.tileH );
+		return w * tY + tX;
+	}
+	
+	
+	// get a point ( rect ) in 2D space from a tile idx 
+	this.tileIdxToPoint = function( idx )
+>>>>>>> e3fc341d6d878ca0ec9da90eeb64261437a81a4d
 	{
 		var tX;
 		var tY;
