@@ -35,55 +35,10 @@ function init()
 
 function update()
 {	
-<<<<<<< HEAD
 	viewPort.renderMap( map );
 	for( i=0; i<sprites.length; ++i )
 	{
 		viewPort.renderSprite( sprites[i], map );
-=======
-	for( i=0; i<sprites.length; ++i )
-	{
-		var render = 0;
-		rect = sprites[i].getBounds();
-		sprites[i].update( 33.3 ); // aprox
-
-		// - dont like this --------------------------------------------
-		if( !sprites[i].isMoving() )
-		{
-			var rect2 = sprites[i].getBounds();
-			idx = map.pointToTileIdxVP( rect2.x, rect2.y );
-			for( j=0; j<sfxData.length; ++j )
-			{
-				if( sfxData[j].idx == idx )
-				{
-					sfxData[j].trigger( sprites[i] );
-				}
-			}
-		}
-		// -------------------------------------------------------------
-		
-		if( true ) // sprite visibility test
-		{			
-			if( sprites[i].isDirty() )
-			{
-				map.setDirtyRectPx( rect );
-			}
-		}
-		else
-		{
-			sprites[i].clearDirty();
-		}
-	}
-	
-	map.draw( context );
-	
-	for( i=0; i<sprites.length; ++i )	 
-	{
-		if( sprites[i].isDirty() )
-		{
-			sprites[i].draw( context );
-		}
->>>>>>> e3fc341d6d878ca0ec9da90eeb64261437a81a4d
 	}
 }
 
