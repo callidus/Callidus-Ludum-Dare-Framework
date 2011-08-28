@@ -99,15 +99,19 @@ function telyport( idx, val )
 		if( match.length > 1 )
 		{
 			var idx = Math.floor( Math.random() * match.length );
-			map.scrollToIndex( match[idx].idx ); // NOTE: should only be player
-			sprite.pos.y = map.tileGfx.tileH;
-			sprite.pos.x = map.tileGfx.tileW;
+			
+			var pnt = new Point2D( 0, 0 );
+			pnt.fromIdx( match[idx].idx, map.width, map.height );
+			sprite.rect.point.y = pnt.y;
+			sprite.rect.point.x = pnt.x;
+			
+			pnt.x -= 1;
+			pnt.y -= 1;
+			viewPort.viewAt( pnt, map ); // NOTE: should only be player
 			
 			// HACK!!! get off the telyporter ---------------
 			handleKeyPress( null );
 			// ----------------------------------------------
-			
-			match[idx].lock();
 			
 			var snd = new Audio("snd/tely.wav");
 			snd.play();

@@ -4,9 +4,9 @@ var canvas = null;
 var context = null;
 var fps = 30;
 var map = null;
-var sprites = new Array();
-
 var viewPort;
+var sprites = new Array();
+var particles = new Array();
 
 window.onload = init;
 window.onkeypress = function(e) {
@@ -31,14 +31,39 @@ function init()
 	buildSfxData();
 							
 	buildPlayer( sprites );
+	
+	pm = new ParticleEngine( 100 );
+	pm.initB( new Rect2D( 3, 3, 1, 1 ), 255, 10, 10, 32 );
 }
 
 function update()
 {	
+	var idx;
 	viewPort.renderMap( map );
-	for( i=0; i<sprites.length; ++i )
+	
+	for( var i=0; i<sprites.length; ++i )
 	{
-		viewPort.renderSprite( sprites[i], map );
+		if( viewPort.isVisible( sprites[i].rect ) )
+		{
+			viewPort.renderSprite( sprites[i], map );
+		}
+		
+		idx = sprites[i].rect.point.asIdx( map.width, map.height );
+		for( var j=0; j<sfxData.length; ++j )
+		{
+			if( sfxData[j].idx == idx )
+			{
+				sfxData[j].trigger( sprites[i] );
+			}
+		}
+	}
+
+	for( var i=0; i<particles.length; ++i )
+	{
+		if( viewPort.isVisible( particles[i].rect ) )
+		{
+			viewPort.renderParticles( particles[i], map );
+		}
 	}
 }
 

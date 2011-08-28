@@ -71,6 +71,16 @@ function buildPlayer( sprites )
 		pnt.y -= 1;
 		viewPort.viewAt( pnt, map );
 	}
+	
+	for( j=0; j<starts.length; ++j )
+	{
+		var pe = new ParticleEngine( 100 );
+		pe.rect.point.fromIdx( starts[j].idx, map.width, map.height );
+		pe.rect.w = 1;
+		pe.rect.h = 1;
+		pe.initB( new Colour( 255, 10, 10 ), 64 );
+		particles.push( pe );
+	}
 	// ----------------------------------------------------------------
 	
 	sprites[sprites.length] = player
@@ -127,6 +137,14 @@ function handleKeyPress( event )
 			targ.x = player.rect.getX() + 1;
 			targ.y = player.rect.getY();
 			player.setAnimRun( 3 );	
+			break;
+			
+		case "x":
+			viewPort.screenShake();
+			break;
+			
+		case "z":
+			viewPort.test( map );
 			break;
 	};
 	
