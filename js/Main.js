@@ -48,12 +48,15 @@ function update()
 			viewPort.renderSprite( sprites[i], map );
 		}
 		
-		idx = sprites[i].rect.point.asIdx( map.width, map.height );
-		for( var j=0; j<sfxData.length; ++j )
+		if( !sprites[i].isMoving() )
 		{
-			if( sfxData[j].idx == idx )
+			idx = sprites[i].rect.point.asIdx( map.width, map.height );
+			for( var j=0; j<sfxData.length; ++j )
 			{
-				sfxData[j].trigger( sprites[i] );
+				if( sfxData[j].idx == idx )
+				{
+					sfxData[j].trigger( sprites[i] );
+				}
 			}
 		}
 	}

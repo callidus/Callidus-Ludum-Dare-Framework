@@ -78,7 +78,7 @@ function buildPlayer( sprites )
 		pe.rect.point.fromIdx( starts[j].idx, map.width, map.height );
 		pe.rect.w = 1;
 		pe.rect.h = 1;
-		pe.initB( new Colour( 255, 10, 10 ), 64 );
+		pe.initB( new Colour( 255, 255, 255 ), 64 );
 		particles.push( pe );
 	}
 	// ----------------------------------------------------------------

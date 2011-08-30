@@ -144,8 +144,8 @@ function ViewPort( x, y, w, h, ctx )
 			var x   = this.rect.getX();
 			var y   = this.rect.getY();
 			var pos = pe.rect.point.clone();
-			pos.x = ( pos.x - x ) * map.gfx.tileW + this.pxOffset.x;
-			pos.y = ( pos.y - y ) * map.gfx.tileH + this.pxOffset.y;
+			pos.x = ( pos.x - x ) * map.gfx.tileW - this.pxOffset.x;
+			pos.y = ( pos.y - y ) * map.gfx.tileH - this.pxOffset.y;
 			
 			pe.update( this.context, this.delta, pos );
 			map.setDirtyRect( pe.rect );

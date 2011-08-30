@@ -102,8 +102,7 @@ function telyport( idx, val )
 			
 			var pnt = new Point2D( 0, 0 );
 			pnt.fromIdx( match[idx].idx, map.width, map.height );
-			sprite.rect.point.y = pnt.y;
-			sprite.rect.point.x = pnt.x;
+			sprite.setPosition( pnt );
 			
 			pnt.x -= 1;
 			pnt.y -= 1;
