@@ -193,6 +193,12 @@ function trap( idx )
 			snd.play();
 			
 			this.lock =1;
+			
+			
+			var pe = new ParticleEngine( 100 );
+			pe.rect = sprite.rect.clone();
+			pe.initB( new Colour( 255, 10, 10 ), 64 );
+			particles.push( pe );
 		}
 	}
 }
