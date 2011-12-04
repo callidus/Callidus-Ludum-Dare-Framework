@@ -1,0 +1,82 @@
+
+html {
+  font-size: 9pt;
+}
+
+body {
+} 
+
+#container {
+  width: 950px;
+  margin: auto;
+  background-color: #445566;
+  border: 1px solid #000000;
+}
+
+#container #top_bar {
+  clear: both;
+  background-color: #445566;
+}
+
+#top_bar img {
+  margin: 4px;
+}
+
+#container #tiles {
+  overflow: scroll;
+  width: 150px;
+  height: 600px;
+  float: left;
+}
+
+#container #map {
+  overflow: scroll;
+  width: 800px;
+  height: 600px;
+  background-color: black;
+}
+
+
+/*  pop up styles */
+.popup {
+	background-color: #445566;
+	border: 1px solid #000000;
+	padding: 5px;
+	display: none;
+	text-align: center;
+}
+
+.popup .form_field {
+  margin: auto; 
+}
+
+.popup .form_field label {
+  clear: both;
+  float: left;
+  width: 50%;
+  font-size: 9pt;
+  font-weight: bold;
+  text-align: right;
+}
+
+.popup .texta {
+  border: 1px solid #666666;
+  font-size: 10px;
+  background-color: #CCCCCC;
+  width: 40%;
+}
+
+.popup .filea {
+  width: 60%;
+  margin-bottom: 10px;
+}
+
+.popup .submit {
+  margin-top: 20px;
+}
+
+.center_canvas {
+  margin: auto;
+  border: 1px solid #000000;
+  padding: 10px;
+}

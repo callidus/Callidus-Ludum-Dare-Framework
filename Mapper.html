@@ -1,0 +1,84 @@
+<html>
+	<head>
+		<title>Tile Mapper</title>
+		
+		<script type="text/javascript" language="javascript" src="js/Map.js"></script>
+		<script type="text/javascript" language="javascript" src="js/TileGraphics.js"></script>
+		<script type="text/javascript" language="javascript" src="js/TileUtils.js"></script>
+		<script type="text/javascript" language="javascript" src="js/ViewPort.js"></script>
+		
+		<script type="text/javascript" language="javascript" src="js/MapperSideBar.js"></script>
+		<script type="text/javascript" language="javascript" src="js/MapperMainView.js"></script>
+		<script type="text/javascript" language="javascript" src="js/Mapper.js"></script>
+		
+		<link rel="stylesheet" type="text/css" href="css/Mapper.css" />
+
+	</head>
+	<body>
+		<div id="container">
+			<div id="top_bar">
+				<img src="img/mapper/document-new.png" name="image" onclick="togglePopup( 'newMapPopup', this )"/>
+				<img src="img/mapper/document-open.png" name="image" onclick="togglePopup( 'loadMapPopup', this )"/>
+				<img src="img/mapper/applications-graphics.png" name="image" onclick="togglePopup( 'loadTileSetPopup', this )"/>
+			</div>
+			<div id="tiles">
+				<canvas id="tile_canvas">
+					<p>Your browser does not support the canvas element.</p>
+				</canvas>
+			</div>
+			<div id="map">
+				<div class="center_canvas">
+					<canvas id="map_canvas">
+						<p>Your browser does not support the canvas element.</p>
+					</canvas>
+				</div>
+			</div>
+		</div>
+
+		<!-- hidden popups -->
+		<div id="newMapPopup" class="popup">
+			<h1>New Map</h1>
+			<form>
+				<div class="form_field">
+					<label>Width (in tiles):</label><input type="text" name="width" class="texta"/>
+				</div>
+				<div class="form_field">
+					<label>Height (in tiles):</label><input type="text" name="height" class="texta"/>
+				</div>
+				<input type="button" name="create" value="Create" onClick="newMap(this.form)" class="submit" />
+			</form>
+		</div>
+
+		<div id="loadMapPopup" class="popup">
+			<h1>Load Map</h1>
+			<form>
+				<input type="file" name="path" id="input" class="filea"/>
+				<div class="form_field">
+					<label>Width (in tiles):</label><input type="text" name="width" class="texta"/>
+				</div>
+				<div class="form_field">
+					<label>Height (in tiles):</label><input type="text" name="height" class="texta"/>
+				</div>
+				<input type="button" name="create" value="Create" onClick="" class="submit" />
+			</form>
+		</div>
+
+		<div id="loadTileSetPopup" class="popup">
+			<h1>Load Tile Set</h1>
+			<form>
+				<input type="file" name="path" id="input" class="filea"/>
+				<div class="form_field">
+					<label>Width (in tiles):</label><input type="text" name="width" class="texta"/>
+				</div>
+				<div class="form_field">
+					<label>Height (in tiles):</label><input type="text" name="height" class="texta"/>
+				</div>
+				<div class="form_field">
+					<label>Margin (in pixels):</label><input type="text" name="margin" class="texta"/>
+				</div>
+				<input type="button" name="load" value="Load Tiles" onClick="loadTileSet(this.form,this.files)" class="submit" />
+				</center>
+			</form>
+		</div>
+	</body>
+</html> 
