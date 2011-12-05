@@ -113,7 +113,6 @@ function loadTileSet( form )
 	{  
 		sideBar.w = w;
 		sideBar.h = h;
-		//reader.onload = sideBar.onLoad( sideBar ); 
 		reader.onloadend = sideBar.onLoad( sideBar ); 
 		reader.readAsDataURL( file ); 
 	}

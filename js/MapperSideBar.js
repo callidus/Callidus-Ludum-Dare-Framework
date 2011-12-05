@@ -21,9 +21,13 @@ function SideBar()
 		return function( e )
 		{
 			var j = ( inst.h * inst.w );
+			inst.mapData[LVL_GFX] = new Array();
+			inst.mapData[LVL_PHY] = null;
+			inst.mapData[LVL_SFX] = null;
+			
 			for( i=0; i<j; ++i )
 			{
-				inst.mapData[i] = i+1;
+				inst.mapData[LVL_GFX][i] = i;
 			}
 			
 			j /= 3;
@@ -34,7 +38,7 @@ function SideBar()
 			inst.canvas.width = 3 * inst.tileGraphic.tileRealW 
 			inst.canvas.height = j * inst.tileGraphic.tileRealH 
 			
-			inst.viewPort = new ViewPort( 1, 1, 3, j, inst.context );
+			inst.viewPort = new ViewPort( 0, 0, 3, j, inst.context );
 			inst.tileMap.refresh();
 			inst.draw();
 		};
@@ -52,7 +56,7 @@ function SideBar()
 	
 	this.draw = function()
 	{
-		this.viewPort.renderMap( this.map );
+		this.viewPort.renderMap( this.tileMap );
 	}
 	
 	
@@ -60,12 +64,20 @@ function SideBar()
 	{
 		return function( e )
 		{
-			var idx = inst.tileMap.pointToTile( e.offsetX, e.offsetY );
-			var rct = inst.tileMap.getTilePos( idx );
+			var w = inst.tileMap.width;
+			var h = inst.tileMap.height;
+			
+			var pnt = new Point2D( e.offsetX, e.offsetY );
+			pnt.clampToTile( w, h );
+			
+			var idx = pnt.asIdx( w, h );
+			var rct = new Rect2D( pnt.x, pnt.y, 
+									inst.tileMap.gfx.tileW,
+									inst.tileMap.gfx.tileH );
 			
 			if( idx != inst.pickIdx )
 			{
-				inst.tileMap.setDirty( inst.pickIdx );
+				inst.tileMap.setDirtyIdx( inst.pickIdx );
 				inst.pickIdx = idx;
 				inst.draw();
 				
