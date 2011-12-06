@@ -1,0 +1,67 @@
+<html>
+	<head>
+		<link rel="stylesheet" type="text/css" href="css/Menu.css" />
+		<link rel="stylesheet" type="text/css" href="css/Body.css" />
+		<link rel="stylesheet" type="text/css" href="css/Value.css" />
+		
+		<script type="text/javascript" language="javascript" src="js/Menu.js"></script>
+		<script type="text/javascript" language="javascript" src="js/Body.js"></script>
+		
+		<script type="text/javascript"> 
+			window.onresize = resize;
+			function init()
+			{
+				initMenu( 'menuA', 'buttonA' );
+				resize();
+			} 
+		</script> 
+		
+		<title>Template</title>
+	</head>
+	
+	<body onLoad="init()" onResize="resize()">
+		<div id="container">
+			<div id="menu_area">
+				<div class="spacer"></div>
+				
+				<div id="buttonA" class="menu_item" onClick="toggleMenu( 'menuA', this )">
+					New Map
+				</div>
+				
+				<div id="buttonB" class="menu_item" onClick="toggleMenu( 'menuB', this )">
+					Load Tiles
+				</div>
+				
+				<div id="buttonC" class="menu_item" onClick="toggleMenu( 'menuC', this )">
+					Layers
+				</div>
+				
+				<div id="buttonD" class="menu_item" onClick="toggleMenu( 'menuD', this )">
+					Tools
+				</div>
+				
+				<div id="value">
+					Adverts go here ....
+				</div>
+				
+				<div id="menu_body">
+					&nbsp;
+				</div>
+				
+			</div>
+			
+			<div id="body_left">
+				<div class="canvas">
+					<canvas id="canvas_left"><p>Your Browser Does Not Suport HTML Canvas.</p></canvas>
+				</div>
+			</div>
+			
+			<div id="body_main">
+				<div class="canvas">
+					<canvas id="canvas_main"><p>Your Browser Does Not Suport HTML Canvas.</p></canvas>
+				</div>
+			</div>
+			
+		</div>
+	</body>
+</html>

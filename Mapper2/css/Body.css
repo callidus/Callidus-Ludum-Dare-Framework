@@ -1,0 +1,31 @@
+
+body {
+	background-color: grey;
+}
+
+#container {
+	width:	90%;
+	margin:	auto;
+	border: 1px solid black;
+	background-color: grey;
+}
+
+#container #body_left {
+	background-color: white;
+	width: 200px;
+	float: left;
+	
+	-moz-box-shadow: 5px 3px 5px #222;
+	-webkit-box-shadow: 5px 3px 5px #222;
+	box-shadow: 5px 3px 5px #222;
+}
+
+#container .canvas {
+	overflow: scroll;
+}
+
+#container #body_left #left_canvas {
+}
+
+#container #body_main #main_canvas {
+}
