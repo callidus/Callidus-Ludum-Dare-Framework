@@ -100,6 +100,21 @@
 	background-color: white;
 	clear: both;
 	
+	background-image: linear-gradient(bottom, #F2F2F2 42%, #EDEDED 71%, #FFFFFF 86%);
+	background-image: -o-linear-gradient(bottom, #F2F2F2 42%, #EDEDED 71%, #FFFFFF 86%);
+	background-image: -moz-linear-gradient(bottom, #F2F2F2 42%, #EDEDED 71%, #FFFFFF 86%);
+	background-image: -webkit-linear-gradient(bottom, #F2F2F2 42%, #EDEDED 71%, #FFFFFF 86%);
+	background-image: -ms-linear-gradient(bottom, #F2F2F2 42%, #EDEDED 71%, #FFFFFF 86%);
+
+	background-image: -webkit-gradient(
+		linear,
+		left bottom,
+		left top,
+		color-stop(0.42, #F2F2F2),
+		color-stop(0.71, #EDEDED),
+		color-stop(0.86, #FFFFFF)
+	);
+	
 	-moz-box-shadow: 0px 5px 5px #222;
 	-webkit-box-shadow: 0px 5px 5px #222;
 	box-shadow: 0px 5px 5px #222;
@@ -113,9 +128,42 @@
 
 #container #menu_area #menu_body .menu_contents {
 	visibility:hidden;
+	display: none;
 	padding-top: 5px;
 	padding-bottom: 5px;
 	padding-left: 10px;
 	padding-right: 10px;
 }
 
+#container #menu_area #menu_body .form_box {
+	float: left;
+	height: 40px;
+	border: 1px solid black;
+}
+
+#container #menu_area #menu_body .form_box_inner {
+	float: left;
+}
+
+#container #menu_area #menu_body .form_field label {
+  clear: both;
+  float: left;
+  font-size: 9pt;
+  font-weight: bold;
+  text-align: right;
+}
+
+#container #menu_area #menu_body .texta {
+  border: 1px solid #666666;
+  font-size: 10px;
+  background-color: #CCCCCC;
+}
+
+#container #menu_area #menu_body .filea {
+  width: 60%;
+  margin-bottom: 10px;
+}
+
+#container #menu_area #menu_body .submit {
+	float: rigth;
+}
