@@ -156,6 +156,7 @@
 #container #menu_area #menu_body .texta {
   border: 1px solid #666666;
   font-size: 10px;
+  width: 50px;
   background-color: #CCCCCC;
 }
 
