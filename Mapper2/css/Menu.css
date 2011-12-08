@@ -10,6 +10,7 @@
 }
 
 #container #menu_area .menu_item {
+	cursor:pointer;
 	margin-top: 5px;
 	margin-left: 2px;
 	margin-right: 2px;
@@ -174,6 +175,7 @@
   height: 17px;
   background-color: #CCCCCC;
   float: right;
+  margin-bottom: 1px;
 }
 
 #container #menu_area #menu_body .filea {
@@ -182,8 +184,10 @@
 }
 
 #container #menu_area #menu_body .button {
+	cursor:pointer;
 	float: left;
 	margin-left: 2px;
+	margin-right: 2px;
 	padding-left: 2px;
 	padding-right: 2px;
 	padding-top: 5px;

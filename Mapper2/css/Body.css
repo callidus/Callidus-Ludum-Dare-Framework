@@ -20,12 +20,17 @@ body {
 	box-shadow: 5px 3px 5px #222;
 }
 
-#container .canvas {
-	overflow: scroll;
+#container #body_left #body_left_inner {
 }
 
-#container #body_left #left_canvas {
+#container #body_main #body_main_inner {
 }
 
-#container #body_main #main_canvas {
+#container #body_left #canvas_left {
+	width: 198px;
+	margin-left: 1px;
+	margin-right: 1px;
+}
+
+#container #body_main #canvas_main {
 }

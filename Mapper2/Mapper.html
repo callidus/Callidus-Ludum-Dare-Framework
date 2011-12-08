@@ -25,21 +25,10 @@
 				<!-- this image is needed because google adds stop my body.onLoad stuff -->
 				<div class="spacer"><img src="img/blank.png" onLoad="init()"/></div>
 				
-				<div id="map_btn" class="menu_item" onClick="toggleMenu( 'map_menu', this )">
-					Map
-				</div>
-				
-				<div id="tiles_btn" class="menu_item" onClick="toggleMenu( 'tiles_menu', this )">
-					Tiles
-				</div>
-				
-				<div id="layers_btn" class="menu_item" onClick="toggleMenu( 'layers_menu', this )">
-					Layers
-				</div>
-				
-				<div id="tools_btn" class="menu_item" onClick="toggleMenu( 'tools_menu', this )">
-					Tools
-				</div>
+				<div id="map_btn" class="menu_item" onClick="toggleMenu( 'map_menu', this )">Map</div>
+				<div id="tiles_btn" class="menu_item" onClick="toggleMenu( 'tiles_menu', this )">Tiles</div>
+				<div id="layers_btn" class="menu_item" onClick="toggleMenu( 'layers_menu', this )">Layers</div>
+				<!-- div id="tools_btn" class="menu_item" onClick="toggleMenu( 'tools_menu', this )">Tools</div -->
 				
 				<div id="value">
 					<script type="text/javascript"><!--
@@ -55,55 +44,86 @@
 					</script>
 				</div>
 				
+				<!-- MAP MENU -->
 				<div id="menu_body">
 					<div id="map_menu" class="menu_contents">					
 						<form>
 							<div class="form_box">
 								<div class="form_box_inner">
 									<div class="form_field">
-										<label>Width:</label><input type="text" name="width" class="texta"/>
+										<label>Tiles X:</label><input type="text" name="width" class="texta"/>
 									</div>
 
 									<div class="form_field">
-										<label>Height:</label><input type="text" name="height" class="texta"/>
+										<label>Tiles Y:</label><input type="text" name="height" class="texta"/>
 									</div>
 								</div>
 								<div class="button" onClick="newMap(this.form)"><img src="img/document-new.png"/></div>
 								<div class="button" onClick="newMap(this.form)"><img src="img/document-open.png"/></div>
+								<div class="button" onClick="newMap(this.form)"><img src="img/view-fullscreen.png"/></div>
 							</div>
 							<div class="form_box">
-								<div class="button" onClick="newMap(this.form)"><img src="img/document-new.png"/></div>
-								<div class="button" onClick="newMap(this.form)"><img src="img/document-open.png"/></div>
+								<div class="button" onClick="newMap(this.form)"><img src="img/document-save.png"/></div>
+								<div class="button" onClick="newMap(this.form)"><img src="img/document-save-as.png"/></div>
 							</div>
 							<div class="form_box">
-								<div class="form_box_inner">
-									<div class="form_field">
-										<label>Width:</label><input type="text" name="width" class="texta"/>
-									</div>
-
-									<div class="form_field">
-										<label>Height:</label><input type="text" name="height" class="texta"/>
-									</div>
-								</div>
-								<div class="button" onClick="newMap(this.form)"><img src="img/document-new.png"/></div>
 							</div>
 						</form>
 					</div>
-					<div id="tiles_menu" class="menu_contents">tiles</div>
-					<div id="layers_menu" class="menu_contents">layers</div>
-					<div id="tools_menu" class="menu_contents">tools</div>
+					
+					<!-- TILES MENU -->
+					<div id="tiles_menu" class="menu_contents">
+						<form>
+							<div class="form_box">
+								<div class="form_box_inner">
+									<div class="form_field">
+										<label>Tiles X:</label><input type="text" name="width" class="texta"/>
+									</div>
+
+									<div class="form_field">
+										<label>Tiles Y:</label><input type="text" name="height" class="texta"/>
+									</div>
+								</div>
+								<div class="button" onClick="newMap(this.form)"><img src="img/document-open.png"/></div>
+							</div>
+							<div class="form_box">
+							</div>
+						</form>
+					</div>
+					
+					<!-- LAYERS MENU -->
+					<div id="layers_menu" class="menu_contents">
+						<form>
+							<div class="form_box">
+								<div class="button" onClick="newMap(this.form)"><img src="img/document-new.png"/></div>
+							</div>
+							<div class="form_box">
+								<div class="button" onClick="newMap(this.form)"><img src="img/document-save-as.png"/></div>
+								<div class="button" onClick="newMap(this.form)"><img src="img/system-search.png"/></div>
+								<div class="button" onClick="newMap(this.form)"><img src="img/edit-delete.png"/></div>
+							</div>
+							<div class="form_box">
+								<div class="button" onClick="newMap(this.form)"><img src="img/image-missing.png"/></div>
+								<div class="button" onClick="newMap(this.form)"><img src="img/image-missing.png"/></div>
+							</div>
+						</form>
+					</div>
+					
+					<!-- TOOLS MENU -->
+					<div id="tools_menu" class="menu_contents">
+					</div>
 				</div>
 				
 			</div>
 			
 			<div id="body_left">
-				<div class="canvas">
+				<div id="body_left_inner">
 					<canvas id="canvas_left"><p>Your Browser Does Not Suport HTML Canvas.</p></canvas>
 				</div>
 			</div>
 			
 			<div id="body_main">
-				<div class="canvas">
+				<div id="body_main_inner">
 					<canvas id="canvas_main"><p>Your Browser Does Not Suport HTML Canvas.</p></canvas>
 				</div>
 			</div>
