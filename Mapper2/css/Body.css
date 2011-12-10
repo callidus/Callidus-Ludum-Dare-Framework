@@ -4,33 +4,11 @@ body {
 }
 
 #container {
-	/*width:	90%;*/
 	margin:	auto;
 	border: 1px solid black;
 	background-color: grey;
 }
 
-#container #body_left {
-	background-color: #F2F2F2;
-	width: 200px;
-	float: left;
-	
-	-moz-box-shadow: 5px 3px 5px #222;
-	-webkit-box-shadow: 5px 3px 5px #222;
-	box-shadow: 5px 3px 5px #222;
-}
-
-#container #body_left #body_left_inner {
-}
-
-#container #body_main #body_main_inner {
-}
-
-#container #body_left #canvas_left {
-	width: 198px;
-	margin-left: 1px;
-	margin-right: 1px;
-}
-
 #container #body_main #canvas_main {
 }
+

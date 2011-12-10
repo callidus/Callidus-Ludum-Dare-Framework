@@ -160,29 +160,6 @@
 	float: left;
 }
 
-#container #menu_area #menu_body .form_field label {
-  clear: both;
-  float: left;
-  font-size: 9pt;
-  font-weight: bold;
-  text-align: right;
-}
-
-#container #menu_area #menu_body .texta {
-  border: 1px solid #666666;
-  font-size: 10px;
-  width: 50px;
-  height: 17px;
-  background-color: #CCCCCC;
-  float: right;
-  margin-bottom: 1px;
-}
-
-#container #menu_area #menu_body .filea {
-	visibility:hidden;
-	display: none;
-}
-
 #container #menu_area #menu_body .button {
 	cursor:pointer;
 	float: left;
@@ -280,3 +257,126 @@
 	background-color: #CCCCCC;
 	float: right;
 }
+
+
+.popup {
+	position: absolute;
+	overflow: auto;
+	visibility: hidden;
+	display: none;
+	
+	
+	background-image: linear-gradient(bottom, #F2F2F2 42%, #E2E2E2 74%, #FFFFFF 86%);
+	background-image: -o-linear-gradient(bottom, #F2F2F2 42%, #E2E2E2 74%, #FFFFFF 86%);
+	background-image: -moz-linear-gradient(bottom, #F2F2F2 42%, #E2E2E2 74%, #FFFFFF 86%);
+	background-image: -webkit-linear-gradient(bottom, #F2F2F2 42%, #E2E2E2 74%, #FFFFFF 86%);
+	background-image: -ms-linear-gradient(bottom, #F2F2F2 42%, #E2E2E2 74%, #FFFFFF 86%);
+
+	background-image: -webkit-gradient(
+		linear,
+		left bottom,
+		left top,
+		color-stop(0.42, #F2F2F2),
+		color-stop(0.74, #E2E2E2),
+		color-stop(0.86, #FFFFFF)
+	);
+	
+	-moz-box-shadow: 0px 0px 5px #222;
+	-webkit-box-shadow: 0px 0px 5px #222;
+	box-shadow: 0px 0px 5px #222;
+	
+	-moz-border-radius-toprigth: 10px;
+	border-top-right-radius: 10px;
+	
+	-moz-border-radius-topleft: 10px;
+	border-top-left-radius: 10px;
+	
+	-moz-border-radius-bottomrigth: 10px;
+	border-bottom-right-radius: 10px;
+	
+	-moz-border-radius-bottomleft: 10px;
+	border-bottom-left-radius: 10px;
+}
+
+.popup .pop_up_head {
+	cursor:move;
+	text-align: center;
+	background-image: linear-gradient(bottom, rgb(255,255,255) 9%, rgb(255,184,60) 50%, rgb(247,132,0) 86%);
+	background-image: -o-linear-gradient(bottom, rgb(255,255,255) 9%, rgb(255,184,60) 50%, rgb(247,132,0) 86%);
+	background-image: -moz-linear-gradient(bottom, rgb(255,255,255) 9%, rgb(255,184,60) 50%, rgb(247,132,0) 86%);
+	background-image: -webkit-linear-gradient(bottom, rgb(255,255,255) 9%, rgb(255,184,60) 50%, rgb(247,132,0) 86%);
+	background-image: -ms-linear-gradient(bottom, rgb(255,255,255) 9%, rgb(255,184,60) 50%, rgb(247,132,0) 86%);
+
+	background-image: -webkit-gradient(
+		linear,
+		left bottom,
+		left top,
+		color-stop(0.09, rgb(255,255,255)),
+		color-stop(0.5, rgb(255,184,60)),
+		color-stop(0.86, rgb(247,132,0))
+	);
+		
+	-moz-border-radius-toprigth: 10px;
+	border-top-right-radius: 10px;
+	
+	-moz-border-radius-topleft: 10px;
+	border-top-left-radius: 10px;
+}
+
+.popup .pop_up_body {
+	background-color: white;
+	margin: 5px;
+	border: 1px solid #BBBBBB;
+	background-color: #EEEEEE;
+	
+	-moz-border-radius-toprigth: 5px;
+	border-top-right-radius: 5px;
+	
+	-moz-border-radius-topleft: 5px;
+	border-top-left-radius: 5px;
+	
+	-moz-border-radius-bottomrigth: 5px;
+	border-bottom-right-radius: 5px;
+	
+	-moz-border-radius-bottomleft: 5px;
+	border-bottom-left-radius: 5px;
+	
+	-moz-box-shadow: 0px 0px 5px #222;
+	-webkit-box-shadow: 0px 0px 5px #222;
+	box-shadow: 0px 0px 5px #222;
+}
+
+.popup .form_field {
+	clear: both;
+	padding:2px;
+	margin: 5px;	
+	text-align: center;
+}
+
+.popup .form_field label {
+	float: left;
+	font-size: 9pt;
+	/*font-weight: bold;*/
+	text-align: right;
+}
+
+.popup .texta {
+	border: 1px solid #666666;
+	font-size: 10px;
+	background-color: #CCCCCC;
+	float: right;
+}
+
+.popup .filea {
+	font-size: 9pt;
+	border: 1px solid #666666;
+	font-size: 10px;
+	background-color: #CCCCCC;
+	float: right;
+}
+
+.popup .submit {
+	clear:both;
+	margin-top: 20px;
+}
+
