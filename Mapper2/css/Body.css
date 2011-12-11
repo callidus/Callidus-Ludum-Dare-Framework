@@ -1,0 +1,17 @@
+
+body {
+	background-color: grey;
+}
+
+#container {
+	margin:	auto;
+	border: 1px solid black;
+	background-color: grey;
+}
+
+#container #body_main #canvas_main {
+}
+
+#tile_menu #tile_canvas {
+	margin: 2px;
+}
