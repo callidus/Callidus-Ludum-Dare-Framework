@@ -443,5 +443,20 @@ function showMapData( menu, form )
 		gMenuOpen = false;
 	};
 	
+	formRoot.elements['refresh'].onclick = function( e )
+	{
+		if( gMapper )
+		{
+			var elem = formRoot.elements['data'];
+			elem.innerHTML = "";
+			
+			for( i=0; i<gMapper.mapData[LVL_GFX].length; ++i )
+			{
+				elem.innerHTML += "," + gMapper.mapData[LVL_GFX][i];
+			}
+			elem.innerText = elem.innerHTML;
+		}
+	}
 	
+	formRoot.elements['refresh'].onclick();
 }
