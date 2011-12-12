@@ -1,7 +1,11 @@
 
 function toggleObjVisible(obj)
 {
+<<<<<<< HEAD
 	obj.style.visibility = ( obj.style.visibility == 'visible' ) ? 'hidden' : 'visible';
+=======
+ 	obj.style.visibility = ( obj.style.visibility == 'visible' ) ? 'hidden' : 'visible';
+>>>>>>> a1e99dc3f635dddf6556a11c8e0f244a8931f9b6
 	obj.style.display = ( obj.style.display == 'block' ) ? 'none' : 'block';
 }
 
@@ -79,8 +83,13 @@ function dragStart( event, id )
 	dragObj.elStartLeft  = parseInt(dragObj.elNode.style.left, 10);
 	dragObj.elStartTop   = parseInt(dragObj.elNode.style.top,  10);
 
+<<<<<<< HEAD
 	if (isNaN(dragObj.elStartLeft)) dragObj.elStartLeft = dragObj.elNode.offsetLeft;
 	if (isNaN(dragObj.elStartTop))  dragObj.elStartTop  = dragObj.elNode.offsetTop;
+=======
+	if (isNaN(dragObj.elStartLeft)) dragObj.elStartLeft = 0;
+	if (isNaN(dragObj.elStartTop))  dragObj.elStartTop  = 0;
+>>>>>>> a1e99dc3f635dddf6556a11c8e0f244a8931f9b6
 
 	// Update element's z-index.
 

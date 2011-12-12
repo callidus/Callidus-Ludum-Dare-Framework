@@ -156,11 +156,16 @@
 	box-shadow: 0px 0px 5px #222;
 }
 
+<<<<<<< HEAD
 /* TODO: fix this one */
 .form_box_inner {
 	text-align: left;
 	float: left;
 	margin-left: 5px;
+=======
+#container #menu_area #menu_body .form_box_inner {
+	float: left;
+>>>>>>> a1e99dc3f635dddf6556a11c8e0f244a8931f9b6
 }
 
 #container #menu_area #menu_body .button {

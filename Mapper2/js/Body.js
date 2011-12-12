@@ -3,6 +3,7 @@ function resize()
 { 
 	var windowheight = window.innerHeight;
 	var frame = document.getElementById( "container" ); 
+<<<<<<< HEAD
 	var canvasMain = document.getElementById( "map_canvas" ); 
 
 	windowheight = ( windowheight / 100 ) * 95;	// 95%
@@ -371,6 +372,24 @@ function newMap( menu, form )
 	if( !gMenuOpen )
 	{
 		gMenuOpen = true;
+=======
+	var canvasLeft = document.getElementById( "canvas_left" ); 
+	var canvasMain = document.getElementById( "canvas_main" ); 
+
+	// 90%
+	windowheight = ( windowheight / 100 ) * 95;	
+	frame.style.height = windowheight + "px"; 
+	//canvasLeft.style.height = windowheight - 84 + "px";
+	canvasMain.style.height = windowheight - 84 + "px";
+}
+
+var menuOpen = false;
+function loadTileSheet( menu, form )
+{
+	if( !menuOpen )
+	{
+		menuOpen = true;
+>>>>>>> a1e99dc3f635dddf6556a11c8e0f244a8931f9b6
 		try 
 		{			
 			menuRoot = document.getElementById( menu );
@@ -380,6 +399,7 @@ function newMap( menu, form )
 				menuRoot.style.visibility = 'visible';
 				menuRoot.style.display = 'block';
 				
+<<<<<<< HEAD
 				// cancel - do nothing 
 				formRoot.elements['cancel'].onclick = function( e ) {
 					menuRoot.style.visibility = 'hidden';
@@ -397,16 +417,27 @@ function newMap( menu, form )
 					gMapper = new Mapper();
 					gMapper.setup(	formRoot.elements["width"].value, 
 									formRoot.elements["height"].value );
+=======
+				formRoot.elements['create'].onclick = function( e ) {
+					menuRoot.style.visibility = 'hidden';
+					menuRoot.style.display = 'none';
+					menuOpen = false;
+>>>>>>> a1e99dc3f635dddf6556a11c8e0f244a8931f9b6
 				};
 			}
 		}
 		catch( err ) 
 		{
+<<<<<<< HEAD
 			gMenuOpen = false;
+=======
+			menuOpen = false;
+>>>>>>> a1e99dc3f635dddf6556a11c8e0f244a8931f9b6
 		}
 	}
 }
 
+<<<<<<< HEAD
 // save map
 /*
 function saveMap()
@@ -460,3 +491,5 @@ function showMapData( menu, form )
 	
 	formRoot.elements['refresh'].onclick();
 }
+=======
+>>>>>>> a1e99dc3f635dddf6556a11c8e0f244a8931f9b6
