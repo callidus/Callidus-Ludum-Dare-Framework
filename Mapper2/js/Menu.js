@@ -121,12 +121,6 @@ function sizeStart( event, id )
 		}
 	}
 	
-	// Get cursor position with respect to the page.
-	x = event.clientX + window.scrollX;
-	y = event.clientY + window.scrollY;
-	
-	dragObj.cursorStartX = x;
-	dragObj.cursorStartY = y;
 	dragObj.elStartLeft  = parseInt(dragObj.elNode.style.left, 10);
 	dragObj.elStartTop   = parseInt(dragObj.elNode.style.top,  10);
 
@@ -152,7 +146,7 @@ function sizeGo(event)
 
 	// Move drag element by the same amount the cursor has moved.
 	//dragObj.elNode.style.width = (dragObj.elStartLeft + x - dragObj.cursorStartX) + "px";
-	dragObj.elNode.style.height = (dragObj.elStartTop  + y - dragObj.cursorStartY) + "px";
+	dragObj.elNode.style.height = ( ( y - dragObj.cursorStartY ) ) + "px"; // - dragObj.elStartTop ) + "px";
 	event.preventDefault();
 }
 

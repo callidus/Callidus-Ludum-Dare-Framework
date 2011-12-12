@@ -18,6 +18,7 @@ body {
 
 #tile_menu #tile_body {
 	overflow-y: scroll !important;
+	height: 200px;
 }
 
 #tile_menu #tile_canvas {
