@@ -53,22 +53,22 @@
 								</div>
 							</div>
 							<div class="form_box">
-								<div id="new_map" title="New Map" class="button_disabled" onClick="newMap('new_map_menu','new_map_form')">
+								<div id="new_map" title="New Map" class="button_disabled">
 									<img id="new_map_img" src="img/document-new.png"/>
 								</div>
-								<div id="open_map" title="Open Map" class="button_disabled" onClick="openMap(this.form)">
+								<div id="open_map" title="Open Map" class="button_disabled">
 									<img id="open_map_img" src="img/document-open.png"/>
 								</div>
-								<div id="resize_map" title="Resize Map" class="button_disabled" onClick="resizeMap(this.form)">
+								<div id="resize_map" title="Resize Map" class="button_disabled">
 									<img id="resize_map_img" src="img/view-fullscreen.png"/>
 								</div>
 							</div>
 							<div class="form_box">
-								<div id="save" title="Save" class="button_disabled" onClick="showMapData('map_data_menu','map_data_form')">
-									<img id="save_img" src="img/document-save.png"/>
+								<div id="save_map" title="Save" class="button_disabled">
+									<img id="save_map_img" src="img/document-save.png"/>
 								</div>
-								<div id="save_as" title="Save As" class="button_disabled" onClick="saveMapAs(this.form)">
-									<img id="save_as_img" src="img/document-save-as.png"/>
+								<div id="save_map_as" title="Save As" class="button_disabled" onClick="saveMapAs(this.form)">
+									<img id="save_map_as_img" src="img/document-save-as.png"/>
 								</div>
 							</div>
 							<div class="form_box">
@@ -110,9 +110,10 @@
 			<!-- POPUPS -->
 			<div id="tile_menu" class="popup">
 				<div class="pop_up_head" onmousedown="dragStart(event, 'tile_menu')">Tiles</div>
-				<div class="pop_up_body">
+				<div class="pop_up_body" id="tile_body">
 					<canvas id="tile_canvas"><p>Your Browser Does Not Suport HTML Canvas.</p></canvas>
 				</div>
+				<div class="pop_up_tail" onmousedown="sizeStart(event, 'tile_menu')"></div>
 			</div>
 			
 			<!-- OPEN TILE SHEET -->
@@ -156,18 +157,39 @@
 				</div>
 			</div>
 			
+			<div id="resize_map_menu" class="popup">
+				<div class="pop_up_head" onmousedown="dragStart(event, 'resize_map_menu')">Resize</div>
+				<div class="pop_up_body">
+					<form id="resize_map_form">
+						<div class="form_field">
+							<p><b>Warning:</b> truncated data will be lost!</p>
+						</div>
+						<div class="form_field">
+							<label>Width (in tiles):</label><input type="text" name="width" class="texta"/>
+						</div>
+						<div class="form_field">
+							<label>Height (in tiles):</label><input type="text" name="height" class="texta"/>
+						</div>
+						<div class="form_field">
+							<input type="button" name="resize" value="Resize" onClick="" class="submit" />
+							<input type="button" name="cancel" value="Cancel" onClick="" class="submit" />
+						</div>
+					</form>
+				</div>
+			</div>
+			
 			<!-- show map data -->
 			<div id="map_data_menu" class="popup">
 				<div class="pop_up_head" onmousedown="dragStart(event, 'map_data_menu')">Map Data</div>
 				<div class="pop_up_body">
 					<form id="map_data_form">
 						<div class="form_field">
-							<textarea name="data" rows="5" cols="50"></textarea>
+							<textarea name="data" rows="5" cols="50" disabled="disabled"></textarea>
 						</div>
-						<div class="form_box_inner">
+						<!-- div class="form_box_inner">
 							<label>Line Breaks:</label><input type="checkbox" name="breaks" value="Line Breaks" checked/>
 							<label>Comments:</label><input type="checkbox" name="comments" value="Comments" checked/>
-						</div>
+						</div -->
 						<div class="form_field">
 							<input type="button" name="close" value="Close" onClick="" class="submit" />
 							<input type="button" name="refresh" value="Refresh" onClick="" class="submit" />

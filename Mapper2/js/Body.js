@@ -5,7 +5,11 @@ function resize()
 	var frame = document.getElementById( "container" ); 
 	
 	windowheight = ( windowheight / 100 ) * 95;	// 95%
-	frame.style.height = windowheight + "px"; 
+	frame.style.height = windowheight + "px";
+	
+	// HACK - fix inner height
+	frame = document.getElementById( "body_main_inner" ); 
+	frame.style.height = windowheight - 84 + "px";
 }
 
 
@@ -62,6 +66,11 @@ function TileBrowser()
 			
 			inst.selectIdx = 0;
 			inst.drawSelection();
+
+			// gMenuTab from Menu.js - i dont like this being here
+			// i also dont like using hard coded id values
+			gMenuTab["new_map"].enable( "newMap('new_map_menu','new_map_form')" );
+			gMenuTab["open_map"].enable( );
 		}
 	};
 	
@@ -203,10 +212,6 @@ function loadTileSheet( menu, form )
 					menuRoot.style.visibility = 'hidden';
 					menuRoot.style.display = 'none';
 					gMenuOpen = false;
-					
-					// this is a bit shit - tell our menu to allow stuff
-					gMenuTab["new_map"].enable();
-					gMenuTab["load_map"].enable();
 				};
 				
 				// load file sheet
@@ -253,7 +258,7 @@ function Mapper()
 	this.pickIdx = 0;
 	this.doPaint = false;
 	
-	this.setup = function( w, h )
+	this.setup = function( w, h, old )
 	{		
 		this.canvas = document.getElementById( "map_canvas" );
 		this.context  = this.canvas.getContext( '2d' );
@@ -270,6 +275,21 @@ function Mapper()
 			this.mapData[LVL_GFX][i] = 0;
 		}
 		
+		if( old )
+		{
+			var tH = Math.min( old.h, h );
+			var tW = Math.min( old.w, w );
+			
+			for( var y=0; y<tH; ++y )
+			{
+				for( var x=0; x<tW; ++x )
+				{
+					this.mapData[LVL_GFX][x + y * w] = 
+						old.mapData[LVL_GFX][x + y * old.w];
+				}
+			}
+		}
+				
 		this.tileGraphic = gTileBrowser.tileGraphic;
 		this.tileMap = new TileMap( this.tileGraphic, w, h );
 		this.tileMap.setData( this.mapData );
@@ -285,6 +305,9 @@ function Mapper()
 		this.canvas.onmousemove		= this.onMouseMove( this );
 		this.canvas.onmousedown		= this.onMouseDown( this );
 		this.canvas.onmouseup		= this.onMouseUp( this );
+		
+		gMenuTab["resize_map"].enable( "resizeMap('resize_map_menu','resize_map_form')" );
+		gMenuTab["save_map"].enable( "showMapData('map_data_menu','map_data_form')" );
 	}
 	
 	this.draw = function()
@@ -464,3 +487,35 @@ function showMapData( menu, form )
 	formRoot.elements['refresh'].onclick();
 }
 
+
+function resizeMap( menu, form )
+{
+	menuRoot = document.getElementById( menu );
+	formRoot = document.getElementById( form );
+	if( menuRoot && formRoot )
+	{
+		menuRoot.style.visibility = 'visible';
+		menuRoot.style.display = 'block';
+	}
+	
+	// close it
+	formRoot.elements['cancel'].onclick = function( e ) {
+		menuRoot.style.visibility = 'hidden';
+		menuRoot.style.display = 'none';
+		gMenuOpen = false;
+	};
+	
+	// go
+	formRoot.elements['resize'].onclick = function( e )
+	{
+		if( gMapper )
+		{
+			var w = formRoot.elements["width"].value;
+			var h = formRoot.elements["height"].value;
+			
+			var newMap = new Mapper();
+			newMap.setup( w, h, gMapper );
+			gMapper = newMap;
+		}
+	}
+}

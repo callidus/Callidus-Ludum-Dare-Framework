@@ -194,7 +194,7 @@
 }
 
 #container #menu_area #menu_body .button_disabled {
-	cursor:pointer;
+	cursor:normal;
 	float: left;
 	margin-left: 2px;
 	margin-right: 2px;
@@ -294,6 +294,7 @@
 
 .popup {
 	position: absolute;
+	/*position:fixed !important;*/
 	overflow: auto;
 	visibility: hidden;
 	display: none;
@@ -329,6 +330,12 @@
 	
 	-moz-border-radius-bottomleft: 10px;
 	border-bottom-left-radius: 10px;
+}
+
+.popup p {
+	font-size: 9pt;
+	margin-left: 5px;
+	margin-right: 5px;
 }
 
 .popup .pop_up_head {
@@ -379,6 +386,18 @@
 	box-shadow: 0px 0px 5px #222;
 }
 
+.popup .pop_up_tail {
+	cursor: row-resize;
+	height: 15px;
+	width: 100%;
+
+	-moz-border-radius-bottomrigth: 10px;
+	border-bottom-right-radius: 10px;
+	
+	-moz-border-radius-bottomleft: 10px;
+	border-bottom-left-radius: 10px;
+}
+
 .popup .form_field {
 	clear: both;
 	padding:2px;
@@ -389,7 +408,6 @@
 .popup .form_field label {
 	float: left;
 	font-size: 9pt;
-	/*font-weight: bold;*/
 	text-align: right;
 }
 
@@ -398,6 +416,7 @@
 	font-size: 10px;
 	background-color: #CCCCCC;
 	float: right;
+	margin-left: 5px;
 }
 
 .popup .filea {

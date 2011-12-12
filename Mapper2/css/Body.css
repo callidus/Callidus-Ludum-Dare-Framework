@@ -9,7 +9,15 @@ body {
 	background-color: grey;
 }
 
-#container #body_main #canvas_main {
+#container #body_main #body_main_inner {
+	overflow: scroll;
+}
+
+#tile_menu {
+}
+
+#tile_menu #tile_body {
+	overflow-y: scroll !important;
 }
 
 #tile_menu #tile_canvas {

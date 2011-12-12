@@ -56,7 +56,7 @@ function initMenu( id, btn )
 		'save_map_as' : document.getElementById('save_map_as'),
 		'new_layer' : document.getElementById('new_layer'),
 		'show_hide' : document.getElementById('show_hide'),
-		'save_layer' : document.getElementById('save_layer'),
+		'save_layer_as' : document.getElementById('save_layer_as'),
 		'delete_layer' : document.getElementById('delete_layer'),
 		'fill' : document.getElementById('fill'),
 		'detail_fill' : document.getElementById('detail_fill') };
@@ -68,10 +68,13 @@ function initMenu( id, btn )
 		{
 			var item = gMenuTab[key];
 			item.icon = document.getElementById( key + "_img" );
+			item.iconSrc = item.icon.src;
+			item.iconDisSrc = item.icon.src.slice( 0, -4 ) + "-dis.png";
 			item.onclick = function( e ){};
 			
 			item.enable = function( func )
 			{
+				this.icon.src = this.iconSrc;
 				this.setAttribute( "class", "button" );
 				if( func )
 				{
@@ -81,6 +84,7 @@ function initMenu( id, btn )
 			
 			item.disable = function()
 			{
+				this.icon.src = this.iconDisSrc;
 				this.setAttribute( "class", "button_disabled" );
 				this.setAttribute( "onClick", "nullFunc()" );
 			}
@@ -96,6 +100,68 @@ function initMenu( id, btn )
 // - dragging popups ---------------------------------------------------
 var dragObj = new Object();
 dragObj.zIndex = 0;
+
+function sizeStart( event, id )
+{
+	var el;
+	var x, y;
+
+	if (id)
+	{
+		dragObj.elNode = document.getElementById( id );
+	}
+	else 
+	{
+		dragObj.elNode = event.target;
+
+		// If this is a text node, use its parent element.
+		if (dragObj.elNode.nodeType == 3)
+		{
+			dragObj.elNode = dragObj.elNode.parentNode;
+		}
+	}
+	
+	// Get cursor position with respect to the page.
+	x = event.clientX + window.scrollX;
+	y = event.clientY + window.scrollY;
+	
+	dragObj.cursorStartX = x;
+	dragObj.cursorStartY = y;
+	dragObj.elStartLeft  = parseInt(dragObj.elNode.style.left, 10);
+	dragObj.elStartTop   = parseInt(dragObj.elNode.style.top,  10);
+
+	if (isNaN(dragObj.elStartLeft)) dragObj.elStartLeft = dragObj.elNode.offsetLeft;
+	if (isNaN(dragObj.elStartTop))  dragObj.elStartTop  = dragObj.elNode.offsetTop;
+	
+	// Update element's z-index.
+	dragObj.elNode.style.zIndex = ++dragObj.zIndex;
+	
+	// Capture mousemove and mouseup events on the page.
+	document.addEventListener( "mousemove", sizeGo,   true);
+	document.addEventListener( "mouseup",   sizeStop, true);
+	event.preventDefault();
+}
+
+function sizeGo(event)
+{
+	var x, y;
+	
+	// Get cursor position with respect to the page.
+	x = event.clientX + window.scrollX;
+	y = event.clientY + window.scrollY;
+
+	// Move drag element by the same amount the cursor has moved.
+	//dragObj.elNode.style.width = (dragObj.elStartLeft + x - dragObj.cursorStartX) + "px";
+	dragObj.elNode.style.height = (dragObj.elStartTop  + y - dragObj.cursorStartY) + "px";
+	event.preventDefault();
+}
+
+function sizeStop(event) 
+{
+	// Stop capturing mousemove and mouseup events.
+	document.removeEventListener( "mousemove", sizeGo,   true );
+	document.removeEventListener( "mouseup",   sizeStop, true );
+}
 
 function dragStart( event, id ) 
 {
