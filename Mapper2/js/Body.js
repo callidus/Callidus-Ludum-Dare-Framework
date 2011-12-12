@@ -203,6 +203,10 @@ function loadTileSheet( menu, form )
 					menuRoot.style.visibility = 'hidden';
 					menuRoot.style.display = 'none';
 					gMenuOpen = false;
+					
+					// this is a bit shit - tell our menu to allow stuff
+					gMenuTab["new_map"].enable();
+					gMenuTab["load_map"].enable();
 				};
 				
 				// load file sheet

@@ -48,26 +48,50 @@
 					<div id="map_menu" class="menu_contents">					
 						<form>
 							<div class="form_box">
-								<div title="Load Tile Sheet" class="button" onClick="loadTileSheet('open_menu','open_menu_form')"><img src="img/document-open.png"/></div>
+								<div id="load_tile_sheet" title="Load Tile Sheet" class="button_disabled" >
+									<img id="load_tile_sheet_img" src="img/document-open.png"/>
+								</div>
 							</div>
 							<div class="form_box">
-								<div title="New Map" class="button" onClick="newMap('new_map_menu','new_map_form')"><img src="img/document-new.png"/></div>
-								<div title="Open Map" class="button" onClick="openMap(this.form)"><img src="img/document-open.png"/></div>
-								<div title="Resize Map" class="button" onClick="resizeMap(this.form)"><img src="img/view-fullscreen.png"/></div>
+								<div id="new_map" title="New Map" class="button_disabled" onClick="newMap('new_map_menu','new_map_form')">
+									<img id="new_map_img" src="img/document-new.png"/>
+								</div>
+								<div id="open_map" title="Open Map" class="button_disabled" onClick="openMap(this.form)">
+									<img id="open_map_img" src="img/document-open.png"/>
+								</div>
+								<div id="resize_map" title="Resize Map" class="button_disabled" onClick="resizeMap(this.form)">
+									<img id="resize_map_img" src="img/view-fullscreen.png"/>
+								</div>
 							</div>
 							<div class="form_box">
-								<div title="Save" class="button" onClick="showMapData('map_data_menu','map_data_form')"><img src="img/document-save.png"/></div>
-								<div title="Save As" class="button" onClick="saveMapAs(this.form)"><img src="img/document-save-as.png"/></div>
-								<div title="Save Layer As" class="button" onClick="saveLayerAs(this.form)"><img src="img/document-save-as.png"/></div>
+								<div id="save" title="Save" class="button_disabled" onClick="showMapData('map_data_menu','map_data_form')">
+									<img id="save_img" src="img/document-save.png"/>
+								</div>
+								<div id="save_as" title="Save As" class="button_disabled" onClick="saveMapAs(this.form)">
+									<img id="save_as_img" src="img/document-save-as.png"/>
+								</div>
 							</div>
 							<div class="form_box">
-								<div title="New Layer" class="button" onClick="newLayer(this.form)"><img src="img/document-new.png"/></div>
-								<div title="Show/Hide" class="button" onClick="showHide(this.form)"><img src="img/system-search.png"/></div>
-								<div title="Delete Layer" class="button" onClick="deleteLayer(this.form)"><img src="img/edit-delete.png"/></div>
+								<div id="new_layer" title="New Layer" class="button_disabled" onClick="newLayer(this.form)">
+									<img id="new_layer_img" src="img/document-new.png"/>
+								</div>
+								<div id="show_hide" title="Show/Hide" class="button_disabled" onClick="showHide(this.form)">
+									<img id="show_hide_img" src="img/system-search.png"/>
+								</div>
+								<div id="delete_layer" title="Delete Layer" class="button_disabled" onClick="deleteLayer(this.form)">
+									<img id="delete_layer_img" src="img/edit-delete.png"/>
+								</div>
+								<div id="save_layer_as" title="Save Layer As" class="button_disabled" onClick="saveLayerAs(this.form)">
+									<img id="save_layer_as_img" src="img/document-save-as.png"/>
+								</div>
 							</div>
 							<div class="form_box">
-								<div title="Fill" class="button" onClick="newMap(this.form)"><img src="img/image-missing.png"/></div>
-								<div title="Detail Fill" class="button" onClick="newMap(this.form)"><img src="img/image-missing.png"/></div>
+								<div id="fill" title="Fill" class="button_disabled" onClick="newMap(this.form)">
+									<img id="fill_img" src="img/image-missing.png"/>
+								</div>
+								<div id="detail_fill" title="Detail Fill" class="button_disabled" onClick="newMap(this.form)">
+									<img id="detail_fill_img" src="img/image-missing.png"/>
+								</div>
 							</div>
 						</form>
 					</div>

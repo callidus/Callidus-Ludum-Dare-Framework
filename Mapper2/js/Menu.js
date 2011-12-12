@@ -5,7 +5,6 @@ function toggleObjVisible(obj)
 	obj.style.display = ( obj.style.display == 'block' ) ? 'none' : 'block';
 }
 
-
 var lastBtn = null;
 var lastMenu = null;
 function toggleMenu( id, btn )
@@ -36,6 +35,8 @@ function toggleMenu( id, btn )
 	}
 }	
 
+var gMenuTab = null;
+function nullFunc(){}
 function initMenu( id, btn )
 {
 	lastBtn = document.getElementById( btn );
@@ -44,6 +45,52 @@ function initMenu( id, btn )
 	lastMenu = id;
 	obj = document.getElementById( id );
 	toggleObjVisible( obj );
+	
+	// grab all our menu items so we can mess with them later
+	gMenuTab = {
+		'load_tile_sheet' : document.getElementById('load_tile_sheet'),
+		'new_map':  document.getElementById('new_map'),
+		'open_map' : document.getElementById('open_map'),
+		'resize_map' : document.getElementById('resize_map'),
+		'save_map' : document.getElementById('save_map'),
+		'save_map_as' : document.getElementById('save_map_as'),
+		'new_layer' : document.getElementById('new_layer'),
+		'show_hide' : document.getElementById('show_hide'),
+		'save_layer' : document.getElementById('save_layer'),
+		'delete_layer' : document.getElementById('delete_layer'),
+		'fill' : document.getElementById('fill'),
+		'detail_fill' : document.getElementById('detail_fill') };
+	
+	// setup all menu items
+	for( var key in gMenuTab )
+	{	
+		if( gMenuTab[key] && gMenuTab.hasOwnProperty( key ) ) 
+		{
+			var item = gMenuTab[key];
+			item.icon = document.getElementById( key + "_img" );
+			item.onclick = function( e ){};
+			
+			item.enable = function( func )
+			{
+				this.setAttribute( "class", "button" );
+				if( func )
+				{
+					this.setAttribute( "onClick", func );
+				}
+			}
+			
+			item.disable = function()
+			{
+				this.setAttribute( "class", "button_disabled" );
+				this.setAttribute( "onClick", "nullFunc()" );
+			}
+			
+			item.disable();
+		}
+	}
+	
+	// re-enabel the first item
+	gMenuTab['load_tile_sheet'].enable( "loadTileSheet('open_menu','open_menu_form')" );
 }
 
 // - dragging popups ---------------------------------------------------
