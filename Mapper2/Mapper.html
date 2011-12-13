@@ -11,37 +11,49 @@
 		
 		<script type="text/javascript" language="javascript" src="js/Menu.js"></script>
 		<script type="text/javascript" language="javascript" src="js/Body.js"></script>
+		<!--script type="text/javascript" language="javascript" src="js/Value.js"></script-->
 		
 		<script type="text/javascript"> 
-			var val = document.getElementById( 'value' );
-			if( val )
-			{
-				val.src = "Value.html";
-			}
-
 			window.onresize = resize;
 			function init()
 			{
 				initMenu( 'map_menu', 'map_btn' );
 				resize();
+				
+				var val = document.getElementById( 'value' );
+				if( val )
+				{
+					val.src = "Value.html";
+				}
 			} 
 		</script> 
 		
 		<title>Template</title>
 	</head>
 	
-	<body onResize="resize()" onload="init()">
+	<body onResize="resize()" ><!--onload="init()"-->
 		
 		<div id="container">
 			<div id="menu_area">
 				<!-- this image is needed because google adds stop my body.onLoad stuff -->
-				<div class="spacer"><!--img src="img/blank.png" onLoad="init()"/--></div>
+				<div class="spacer"><img src="img/blank.png" onLoad="init()"/></div>
 				
 				<div id="map_btn" class="menu_item" onClick="toggleMenu( 'map_menu', this )">Map</div>
 				<div id="layers_btn" class="menu_item" onClick="toggleMenu( 'layers_menu', this )">Layers</div>
 				<!-- div id="tools_btn" class="menu_item" onClick="toggleMenu( 'tools_menu', this )">Tools</div -->
 				
-				<div id="value">&nbsp;</div>
+				<div id="value">
+					<script type="text/javascript">
+						google_ad_client = "ca-pub-1364436723987565";
+						/* mapper */
+						google_ad_slot = "5987679213";
+						google_ad_width = 468;
+						google_ad_height = 15;
+					</script>
+					<script type="text/javascript"
+						src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+					</script>
+				</div>
 				
 				<!-- MAP MENU -->
 				<div id="menu_body">
