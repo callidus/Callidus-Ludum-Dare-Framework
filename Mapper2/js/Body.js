@@ -476,7 +476,8 @@ function showMapData( menu, form )
 			var elem = formRoot.elements['data'];
 			elem.innerHTML = "";
 			
-			for( i=0; i<gMapper.mapData[LVL_GFX].length; ++i )
+			elem.innerHTML = gMapper.mapData[LVL_GFX][0];
+			for( i=i; i<gMapper.mapData[LVL_GFX].length; ++i )
 			{
 				elem.innerHTML += "," + gMapper.mapData[LVL_GFX][i];
 			}
@@ -518,4 +519,9 @@ function resizeMap( menu, form )
 			gMapper = newMap;
 		}
 	}
+}
+
+function loadMap( menu, form )
+{
+	
 }
