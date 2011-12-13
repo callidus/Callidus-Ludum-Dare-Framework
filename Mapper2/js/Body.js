@@ -70,7 +70,7 @@ function TileBrowser()
 			// gMenuTab from Menu.js - i dont like this being here
 			// i also dont like using hard coded id values
 			gMenuTab["new_map"].enable( "newMap('new_map_menu','new_map_form')" );
-			gMenuTab["open_map"].enable( );
+			gMenuTab["open_map"].enable( "loadMap('load_map_menu','load_map_form')" );
 		}
 	};
 	
@@ -477,7 +477,7 @@ function showMapData( menu, form )
 			elem.innerHTML = "";
 			
 			elem.innerHTML = gMapper.mapData[LVL_GFX][0];
-			for( i=i; i<gMapper.mapData[LVL_GFX].length; ++i )
+			for( i=1; i<gMapper.mapData[LVL_GFX].length; ++i )
 			{
 				elem.innerHTML += "," + gMapper.mapData[LVL_GFX][i];
 			}
@@ -523,5 +523,50 @@ function resizeMap( menu, form )
 
 function loadMap( menu, form )
 {
+	menuRoot = document.getElementById( menu );
+	formRoot = document.getElementById( form );
+	if( menuRoot && formRoot )
+	{
+		menuRoot.style.visibility = 'visible';
+		menuRoot.style.display = 'block';
+	}
 	
+	// close it
+	formRoot.elements['cancel'].onclick = function( e ) {
+		menuRoot.style.visibility = 'hidden';
+		menuRoot.style.display = 'none';
+		gMenuOpen = false;
+	};
+	
+	// load map
+	formRoot.elements['load'].onclick = function( e ) {
+		menuRoot.style.visibility = 'hidden';
+		menuRoot.style.display = 'none';
+		gMenuOpen = false;
+		
+		// load stuff
+		var w = formRoot.elements["width"].value;
+		var h = formRoot.elements["height"].value;
+		var file = formRoot.elements["path"].files[0];
+		//var fileType = /text.*/;  
+		//if( file.type.match( fileType ) ) 
+		{  
+			var reader = new FileReader();  
+			reader.onloadend = function( e )
+			{
+				gMapper = new Mapper();
+				gMapper.setup( w, h );
+				var arr = e.target.result.split(',');
+
+				var cnt = Math.min( w * h, arr.length );
+				for( var i=0; i<cnt; ++i )
+				{
+					gMapper.mapData[LVL_GFX][i] = parseInt( arr[i], 10 );
+				}
+				gMapper.tileMap.setData( gMapper.mapData );
+				gMapper.draw();
+			}
+			reader.readAsText( file );
+		}
+	};
 }

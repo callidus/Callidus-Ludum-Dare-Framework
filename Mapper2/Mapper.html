@@ -140,7 +140,7 @@
 			
 			<!-- NEW MAP -->
 			<div id="new_map_menu" class="popup">
-				<div class="pop_up_head" onmousedown="dragStart(event, 'new_map_menu')">New</div>
+				<div class="pop_up_head" onmousedown="dragStart(event, 'new_map_menu')">New Map</div>
 				<div class="pop_up_body">
 					<form id="new_map_form">
 						<div class="form_field">
@@ -157,8 +157,30 @@
 				</div>
 			</div>
 			
+			<div id="load_map_menu" class="popup">
+				<div class="pop_up_head" onmousedown="dragStart(event, 'load_map_menu')">Load Map</div>
+				<div class="pop_up_body">
+					<form id="load_map_form">
+						<div class="form_field">
+                                                	<input type="file" name="path" class="filea"/>
+	                                        </div>
+
+						<div class="form_field">
+							<label>Width (in tiles):</label><input type="text" name="width" class="texta"/>
+						</div>
+						<div class="form_field">
+							<label>Height (in tiles):</label><input type="text" name="height" class="texta"/>
+						</div>
+						<div class="form_field">
+							<input type="button" name="load" value="Load" onClick="" class="submit" />
+							<input type="button" name="cancel" value="Cancel" onClick="" class="submit" />
+						</div>
+					</form>
+				</div>
+			</div>
+
 			<div id="resize_map_menu" class="popup">
-				<div class="pop_up_head" onmousedown="dragStart(event, 'resize_map_menu')">Resize</div>
+				<div class="pop_up_head" onmousedown="dragStart(event, 'resize_map_menu')">Resize Map</div>
 				<div class="pop_up_body">
 					<form id="resize_map_form">
 						<div class="form_field">
