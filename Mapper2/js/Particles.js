@@ -1,3 +1,11 @@
+/*
+ * <!--
+(c) 2011 Tim Kelsey
+distributedunder the terms of the MIT licence 
+please see licence.txt
+-->
+ */
+
 
 function Colour( r, g, b )
 {

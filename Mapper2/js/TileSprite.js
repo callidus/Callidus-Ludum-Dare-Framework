@@ -1,3 +1,12 @@
+/*
+ * <!--
+(c) 2011 Tim Kelsey
+distributedunder the terms of the MIT licence 
+please see licence.txt
+-->
+ */
+
+
 
 // ---------------------------------------------------------------------
 // an animation data struct

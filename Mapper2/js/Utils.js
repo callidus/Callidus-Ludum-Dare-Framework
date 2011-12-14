@@ -1,3 +1,12 @@
+/*
+ * <!--
+(c) 2011 Tim Kelsey
+distributedunder the terms of the MIT licence 
+please see licence.txt
+-->
+ */
+
+
 /**
  * Returns a number whose value is limited to the given range.
  *

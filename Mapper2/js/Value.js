@@ -1,3 +1,12 @@
+/*
+ * <!--
+(c) 2011 Tim Kelsey
+distributedunder the terms of the MIT licence 
+please see licence.txt
+-->
+ */
+
+
 <script type="text/javascript"><!--
 google_ad_client = "ca-pub-1364436723987565";
 /* mapper */

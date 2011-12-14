@@ -1,3 +1,11 @@
+/*
+ * <!--
+(c) 2011 Tim Kelsey
+distributedunder the terms of the MIT licence 
+please see licence.txt
+-->
+ */
+
 //----------------------------------------------------------------------
 // hack time now :-(
 // need to some how make a game out of this lot ....
