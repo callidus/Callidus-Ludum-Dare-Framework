@@ -11,6 +11,7 @@
 		
 		<script type="text/javascript" language="javascript" src="js/Menu.js"></script>
 		<script type="text/javascript" language="javascript" src="js/Body.js"></script>
+		<script type="text/javascript" language="javascript" src="js/Intro.js"></script>
 		<!--script type="text/javascript" language="javascript" src="js/Value.js"></script-->
 		
 		<script type="text/javascript"> 
@@ -19,6 +20,7 @@
 			{
 				initMenu( 'map_menu', 'map_btn' );
 				resize();
+				showIntro();
 				
 				var val = document.getElementById( 'value' );
 				if( val )
@@ -32,11 +34,10 @@
 	</head>
 	
 	<body onResize="resize()" ><!--onload="init()"-->
-		
 		<div id="container">
 			<div id="menu_area">
 				<!-- this image is needed because google adds stop my body.onLoad stuff -->
-				<div class="spacer"><img src="img/blank.png" onLoad="init()"/></div>
+				<div class="spacer"></div>
 				
 				<div id="map_btn" class="menu_item" onClick="toggleMenu( 'map_menu', this )">Map</div>
 				<div id="layers_btn" class="menu_item" onClick="toggleMenu( 'layers_menu', this )">Layers</div>
@@ -174,8 +175,8 @@
 				<div class="pop_up_body">
 					<form id="load_map_form">
 						<div class="form_field">
-                                                	<input type="file" name="path" class="filea"/>
-	                                        </div>
+								<input type="file" name="path" class="filea"/>
+						</div>
 
 						<div class="form_field">
 							<label>Width (in tiles):</label><input type="text" name="width" class="texta"/>
@@ -232,6 +233,21 @@
 				</div>
 			</div>
 			
+			<div id="info_menu" class="popup">
+				<div class="pop_up_head" onmousedown="dragStart(event, 'info_menu')">Info</div>
+				<div class="pop_up_body">
+					<form id="info_form">
+						<div class="form_field">
+							<textarea name="data" rows="5" cols="50" disabled="disabled"></textarea>
+						</div>
+					
+						<div class="form_field">
+							<input type="button" name="close" value="Close" onClick="" class="submit" />
+						</div>
+					</form>
+				</div>
+			</div>
+			
 			<div id="util_menu" class="popup">
 			</div>
 						
@@ -243,5 +259,6 @@
 			</div>
 			
 		</div>
+		<img src="img/blank.png" onLoad="init()"/>
 	</body>
 </html>

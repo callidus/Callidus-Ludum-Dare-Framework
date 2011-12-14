@@ -200,30 +200,44 @@ function loadTileSheet( menu, form )
 		gMenuOpen = true;
 		try 
 		{			
-			menuRoot = document.getElementById( menu );
-			formRoot = document.getElementById( form );
+			var menuRoot = document.getElementById( menu );
+			var formRoot = document.getElementById( form );
 			if( menuRoot && formRoot )
 			{
 				menuRoot.style.visibility = 'visible';
 				menuRoot.style.display = 'block';
 				
 				// cancel - do nothing 
-				formRoot.elements['cancel'].onclick = function( e ) {
+				formRoot.elements['cancel'].onclick = function( e ) 
+				{
 					menuRoot.style.visibility = 'hidden';
 					menuRoot.style.display = 'none';
 					gMenuOpen = false;
 				};
 				
 				// load file sheet
-				formRoot.elements['load'].onclick = function( e ) {
-					menuRoot.style.visibility = 'hidden';
-					menuRoot.style.display = 'none';
-					gMenuOpen = false;
-					
+				formRoot.elements['load'].onclick = function( e ) 
+				{
 					// load stuff
-					gTileBrowser = new TileBrowser();
-					gTileBrowser.w = formRoot.elements["width"].value;
-					gTileBrowser.h = formRoot.elements["height"].value;
+					var w = parseInt( formRoot.elements["width"].value );
+					var h = parseInt( formRoot.elements["height"].value );
+					
+					if( !isNaN( w ) && !isNaN( h ) )
+					{
+						gTileBrowser = new TileBrowser();
+						gTileBrowser.w = w;
+						gTileBrowser.h = h;
+						menuRoot.style.visibility = 'hidden';
+						menuRoot.style.display = 'none';
+						gMenuOpen = false;
+					}
+					else
+					{
+						showInfo("info_menu", "info_form", 
+							"Sorry, Invalid Input: width=" + formRoot.elements["width"].value + 
+							" and height=" + formRoot.elements["height"].value );
+						return;
+					}
 					
 					var file = formRoot.elements["path"].files[0];
 					var imageType = /image.*/;  
@@ -399,30 +413,44 @@ function newMap( menu, form )
 		gMenuOpen = true;
 		try 
 		{			
-			menuRoot = document.getElementById( menu );
-			formRoot = document.getElementById( form );
+			var menuRoot = document.getElementById( menu );
+			var formRoot = document.getElementById( form );
 			if( menuRoot && formRoot )
 			{
 				menuRoot.style.visibility = 'visible';
 				menuRoot.style.display = 'block';
 				
 				// cancel - do nothing 
-				formRoot.elements['cancel'].onclick = function( e ) {
+				formRoot.elements['cancel'].onclick = function( e ) 
+				{
 					menuRoot.style.visibility = 'hidden';
 					menuRoot.style.display = 'none';
 					gMenuOpen = false;
 				};
 				
 				// build new map
-				formRoot.elements['build'].onclick = function( e ) {
-					menuRoot.style.visibility = 'hidden';
-					menuRoot.style.display = 'none';
-					gMenuOpen = false;
+				formRoot.elements['build'].onclick = function( e ) 
+				{
+					var w = parseInt( formRoot.elements["width"].value );
+					var h = parseInt( formRoot.elements["height"].value );
 					
-					// load stuff
-					gMapper = new Mapper();
-					gMapper.setup(	formRoot.elements["width"].value, 
-									formRoot.elements["height"].value );
+					if( !isNaN( w ) && !isNaN( h ) )
+					{					
+						menuRoot.style.visibility = 'hidden';
+						menuRoot.style.display = 'none';
+						gMenuOpen = false;
+						
+						// load stuff
+						gMapper = new Mapper();
+						gMapper.setup(	w, h );
+					}
+					else
+					{
+						showInfo("info_menu", "info_form", 
+							"Sorry, Invalid Input: width=" + formRoot.elements["width"].value + 
+							" and height=" + formRoot.elements["height"].value );
+						return;
+					}
 				};
 			}
 		}
@@ -454,8 +482,8 @@ function saveMap()
 
 function showMapData( menu, form )
 {
-	menuRoot = document.getElementById( menu );
-	formRoot = document.getElementById( form );
+	var menuRoot = document.getElementById( menu );
+	var formRoot = document.getElementById( form );
 	if( menuRoot && formRoot )
 	{
 		menuRoot.style.visibility = 'visible';
@@ -463,7 +491,8 @@ function showMapData( menu, form )
 	}
 	
 	// close it
-	formRoot.elements['close'].onclick = function( e ) {
+	formRoot.elements['close'].onclick = function( e ) 
+	{
 		menuRoot.style.visibility = 'hidden';
 		menuRoot.style.display = 'none';
 		gMenuOpen = false;
@@ -491,8 +520,9 @@ function showMapData( menu, form )
 
 function resizeMap( menu, form )
 {
-	menuRoot = document.getElementById( menu );
-	formRoot = document.getElementById( form );
+	gMenuOpen = true;
+	var menuRoot = document.getElementById( menu );
+	var formRoot = document.getElementById( form );
 	if( menuRoot && formRoot )
 	{
 		menuRoot.style.visibility = 'visible';
@@ -500,7 +530,8 @@ function resizeMap( menu, form )
 	}
 	
 	// close it
-	formRoot.elements['cancel'].onclick = function( e ) {
+	formRoot.elements['cancel'].onclick = function( e ) 
+	{
 		menuRoot.style.visibility = 'hidden';
 		menuRoot.style.display = 'none';
 		gMenuOpen = false;
@@ -509,22 +540,33 @@ function resizeMap( menu, form )
 	// go
 	formRoot.elements['resize'].onclick = function( e )
 	{
-		if( gMapper )
+		var w = parseInt( formRoot.elements["width"].value );
+		var h = parseInt( formRoot.elements["height"].value );
+		
+		if( !isNaN( w ) && !isNaN( h ) )
 		{
-			var w = formRoot.elements["width"].value;
-			var h = formRoot.elements["height"].value;
-			
 			var newMap = new Mapper();
 			newMap.setup( w, h, gMapper );
 			gMapper = newMap;
+
+			menuRoot.style.visibility = 'hidden';
+			menuRoot.style.display = 'none';
+			gMenuOpen = false;
+		}
+		else
+		{
+			showInfo("info_menu", "info_form", 
+				"Sorry, Invalid Input: width=" + formRoot.elements["width"].value + 
+				" and height=" + formRoot.elements["height"].value );
+			return;
 		}
 	}
 }
 
 function loadMap( menu, form )
 {
-	menuRoot = document.getElementById( menu );
-	formRoot = document.getElementById( form );
+	var menuRoot = document.getElementById( menu );
+	var formRoot = document.getElementById( form );
 	if( menuRoot && formRoot )
 	{
 		menuRoot.style.visibility = 'visible';
@@ -532,24 +574,23 @@ function loadMap( menu, form )
 	}
 	
 	// close it
-	formRoot.elements['cancel'].onclick = function( e ) {
+	formRoot.elements['cancel'].onclick = function( e ) 
+	{
 		menuRoot.style.visibility = 'hidden';
 		menuRoot.style.display = 'none';
 		gMenuOpen = false;
 	};
 	
 	// load map
-	formRoot.elements['load'].onclick = function( e ) {
-		menuRoot.style.visibility = 'hidden';
-		menuRoot.style.display = 'none';
-		gMenuOpen = false;
-		
-		// load stuff
-		var w = formRoot.elements["width"].value;
-		var h = formRoot.elements["height"].value;
+	formRoot.elements['load'].onclick = function( e ) 
+	{	
+		var w = parseInt( formRoot.elements["width"].value );
+		var h = parseInt( formRoot.elements["height"].value );
 		var file = formRoot.elements["path"].files[0];
 		//var fileType = /text.*/;  
 		//if( file.type.match( fileType ) ) 
+		
+		if( !isNaN( w ) && !isNaN( h ) )
 		{  
 			var reader = new FileReader();  
 			reader.onloadend = function( e )
@@ -567,6 +608,39 @@ function loadMap( menu, form )
 				gMapper.draw();
 			}
 			reader.readAsText( file );
+			menuRoot.style.visibility = 'hidden';
+			menuRoot.style.display = 'none';
+			gMenuOpen = false;
+		}
+		else
+		{
+			showInfo("info_menu", "info_form", 
+				"Sorry, Invalid Input: width=" + formRoot.elements["width"].value + 
+				" and height=" + formRoot.elements["height"].value );
+			return;
 		}
 	};
+}
+
+function showInfo( menu, form, info )
+{
+	var menuRoot = document.getElementById( menu );
+	var formRoot = document.getElementById( form );
+	if( menuRoot && formRoot )
+	{
+		var elem = formRoot.elements["data"];
+		elem.innerHTML = info;
+		//elem.innerText = info;
+		
+		menuRoot.style.visibility = 'visible';
+		menuRoot.style.display = 'block';
+	}
+	
+	// close it
+	formRoot.elements['close'].onclick = function( e ) 
+	{
+		menuRoot.style.visibility = 'hidden';
+		menuRoot.style.display = 'none';
+		gMenuOpen = false;
+	};	
 }
