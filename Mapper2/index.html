@@ -27,12 +27,6 @@ please see licence.txt
 				initMenu( 'map_menu', 'map_btn' );
 				resize();
 				showIntro();
-				
-				var val = document.getElementById( 'value' );
-				if( val )
-				{
-					val.src = "Value.html";
-				}
 			} 
 		</script> 
 		
@@ -64,64 +58,68 @@ please see licence.txt
 				
 				<!-- MAP MENU -->
 				<div id="menu_body">
-					<div id="map_menu" class="menu_contents">					
-						<form>
-							<div class="form_box">
-								<div id="load_tile_sheet" title="Load Tile Sheet" class="button_disabled" >
-									<img id="load_tile_sheet_img" src="img/document-open.png"/>
-								</div>
+					<div id="map_menu" class="menu_contents">
+						<div class="form_box">
+							<div id="load_tile_sheet" title="Load Tile Sheet" class="button_disabled" >
+								<img id="load_tile_sheet_img" src="img/document-open.png"/>
 							</div>
-							<div class="form_box">
-								<div id="new_map" title="New Map" class="button_disabled">
-									<img id="new_map_img" src="img/document-new.png"/>
-								</div>
-								<div id="open_map" title="Open Map" class="button_disabled">
-									<img id="open_map_img" src="img/document-open.png"/>
-								</div>
-								<div id="resize_map" title="Resize Map" class="button_disabled">
-									<img id="resize_map_img" src="img/view-fullscreen.png"/>
-								</div>
+						</div>
+						<div class="form_box">
+							<div id="new_map" title="New Map" class="button_disabled">
+								<img id="new_map_img" src="img/document-new.png"/>
 							</div>
-							<div class="form_box">
-								<div id="save_map" title="Save" class="button_disabled">
-									<img id="save_map_img" src="img/document-save.png"/>
-								</div>
-								<div id="save_map_as" title="Save As" class="button_disabled" onClick="saveMapAs(this.form)">
-									<img id="save_map_as_img" src="img/document-save-as.png"/>
-								</div>
+							<div id="open_map" title="Open Map" class="button_disabled">
+								<img id="open_map_img" src="img/document-open.png"/>
 							</div>
-							<div class="form_box">
-								<div id="new_layer" title="New Layer" class="button_disabled" onClick="newLayer(this.form)">
-									<img id="new_layer_img" src="img/document-new.png"/>
-								</div>
-								<div id="show_hide" title="Show/Hide" class="button_disabled" onClick="showHide(this.form)">
-									<img id="show_hide_img" src="img/system-search.png"/>
-								</div>
-								<div id="delete_layer" title="Delete Layer" class="button_disabled" onClick="deleteLayer(this.form)">
-									<img id="delete_layer_img" src="img/edit-delete.png"/>
-								</div>
-								<div id="save_layer_as" title="Save Layer As" class="button_disabled" onClick="saveLayerAs(this.form)">
-									<img id="save_layer_as_img" src="img/document-save-as.png"/>
-								</div>
+							<div id="resize_map" title="Resize Map" class="button_disabled">
+								<img id="resize_map_img" src="img/view-fullscreen.png"/>
 							</div>
-							<div class="form_box">
-								<div id="fill" title="Fill" class="button_disabled" onClick="newMap(this.form)">
-									<img id="fill_img" src="img/image-missing.png"/>
-								</div>
-								<div id="detail_fill" title="Detail Fill" class="button_disabled" onClick="newMap(this.form)">
-									<img id="detail_fill_img" src="img/image-missing.png"/>
-								</div>
+						</div>
+						<div class="form_box">
+							<div id="save_map" title="Save" class="button_disabled">
+								<img id="save_map_img" src="img/document-save.png"/>
 							</div>
-						</form>
+							<div id="save_map_as" title="Save As" class="button_disabled" onClick="saveMapAs(this.form)">
+								<img id="save_map_as_img" src="img/document-save-as.png"/>
+							</div>
+						</div>
+						<div class="form_box">
+							<div id="fill" title="Fill" class="button_disabled" onClick="newMap(this.form)">
+								<img id="fill_img" src="img/image-missing.png"/>
+							</div>
+							<div id="detail_fill" title="Detail Fill" class="button_disabled" onClick="newMap(this.form)">
+								<img id="detail_fill_img" src="img/image-missing.png"/>
+							</div>
+						</div>
 					</div>
 
 					<!-- LAYERS MENU -->
 					<div id="layers_menu" class="menu_contents">
-						<form>
-							<div class="form_box">
-								Coming Soon ...
+						<div class="form_box">
+							<div id="new_layer" title="New Layer" class="button_disabled" onClick="newLayer(this.form)">
+								<img id="new_layer_img" src="img/document-new.png"/>
 							</div>
-						</form>
+							<div id="delete_layer" title="Delete Layer" class="button_disabled" onClick="deleteLayer(this.form)">
+								<img id="delete_layer_img" src="img/edit-delete.png"/>
+							</div>
+							<div id="save_layer_as" title="Save Layer As" class="button_disabled" onClick="saveLayerAs(this.form)">
+								<img id="save_layer_as_img" src="img/document-save-as.png"/>
+							</div>
+						</div>
+						<div class="form_box">
+							<form>
+								<div class="form_field">
+									<select id="layers" class ="texta" title="Select Layer">
+										<option>Base Layer</option>
+									</select>
+								</div>
+							</form>
+						</div>
+						<div class="form_box">
+							<div id="show_hide" title="Show/Hide" class="button_disabled" onClick="showHide(this.form)">
+								<img id="show_hide_img" src="img/system-search.png"/>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -256,7 +254,22 @@ please see licence.txt
 			
 			<div id="util_menu" class="popup">
 			</div>
-						
+			
+			<div id="new_layer_menu" class="popup">
+				<div class="pop_up_head" onmousedown="dragStart(event, 'new_layer_menu')">New Layer</div>
+				<div class="pop_up_body">
+					<form id="new_layer_form">
+						<div class="form_field">
+							<label>Layer Name:</label><input type="text" name="name" class="texta"/>
+						</div>
+						<div class="form_field">
+							<input type="button" name="ok" value="OK" onClick="" class="submit" />
+							<input type="button" name="cancel" value="Cancel" onClick="" class="submit" />
+						</div>
+					</form>
+				</div>
+			</div>
+			
 			<!-- main map area -->
 			<div id="body_main">
 				<div id="body_main_inner">

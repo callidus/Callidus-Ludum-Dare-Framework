@@ -344,7 +344,7 @@ function Mapper()
 		
 		gMenuTab["resize_map"].enable( "resizeMap('resize_map_menu','resize_map_form')" );
 		gMenuTab["save_map"].enable( "showMapData('map_data_menu','map_data_form')" );
-		gMenuTab["new_layer"].enable( "layerMapData('map_data_menu','map_data_form')" );
+		gMenuTab["new_layer"].enable( "makeNewLayer('new_layer_menu','new_layer_form')" );
 	}
 	
 	this.draw = function()
@@ -671,6 +671,40 @@ function showInfo( menu, form, info )
 	};	
 }
 
+function makeNewLayer( menu, form )
+{
+	var menuRoot = document.getElementById( menu );
+	var formRoot = document.getElementById( form );
+	if( menuRoot && formRoot )
+	{
+		var elem = formRoot.elements["name"];
+		elem.innerHTML = "";
+		gMenuOpen = true;
+		
+		menuRoot.style.visibility = 'visible';
+		menuRoot.style.display = 'block';
+		
+		// ok it
+		formRoot.elements['ok'].onclick = function( e ) 
+		{
+			var sel = document.getElementById( "layers" )
+			var len = sel.length;
+			
+			sel.options[len] = new Option(elem.value + " (" + len + ")", len);
+			menuRoot.style.visibility = 'hidden';
+			menuRoot.style.display = 'none';
+			gMenuOpen = false;
+		};
+	}
+	
+	// close it
+	formRoot.elements['cancel'].onclick = function( e ) 
+	{
+		menuRoot.style.visibility = 'hidden';
+		menuRoot.style.display = 'none';
+		gMenuOpen = false;
+	};
+}
 
 function layerMapData( menu, form, info )
 {
