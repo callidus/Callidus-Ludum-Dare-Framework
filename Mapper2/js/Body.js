@@ -83,7 +83,7 @@ function TileBrowser()
 	
 	this.draw = function()
 	{
-		this.viewPort.renderMap( this.tileMap );
+		this.viewPort.renderMap( this.tileMap, LVL_GFX );
 	}
 	
 	this.show = function()
@@ -278,6 +278,13 @@ function Mapper()
 	this.context = null;
 	this.pickIdx = 0;
 	this.doPaint = false;
+	this.activeLayer = LVL_GFX;
+	
+	this.setActiveLayer = function( layer )
+	{
+		this.activeLayer = layer;
+		this.tileMap.refresh();
+	}
 	
 	this.setup = function( w, h, old )
 	{		
@@ -288,12 +295,14 @@ function Mapper()
 		
 		var j = ( h * w );
 		this.mapData[LVL_GFX] = new Array();
-		this.mapData[LVL_PHY] = null;
-		this.mapData[LVL_SFX] = null;
+		this.mapData[LVL_PHY] = new Array();
+		this.mapData[LVL_SFX] = new Array();
 		
 		for( i=0; i<j; ++i )
 		{
 			this.mapData[LVL_GFX][i] = 0;
+			this.mapData[LVL_PHY][i] = 0;
+			this.mapData[LVL_SFX][i] = 0;
 		}
 		
 		if( old )
@@ -307,6 +316,12 @@ function Mapper()
 				{
 					this.mapData[LVL_GFX][x + y * w] = 
 						old.mapData[LVL_GFX][x + y * old.w];
+						
+					this.mapData[LVL_PHY][x + y * w] = 
+						old.mapData[LVL_PHY][x + y * old.w];
+						
+					this.mapData[LVL_SFX][x + y * w] = 
+						old.mapData[LVL_SFX][x + y * old.w];
 				}
 			}
 		}
@@ -329,11 +344,12 @@ function Mapper()
 		
 		gMenuTab["resize_map"].enable( "resizeMap('resize_map_menu','resize_map_form')" );
 		gMenuTab["save_map"].enable( "showMapData('map_data_menu','map_data_form')" );
+		gMenuTab["new_layer"].enable( "layerMapData('map_data_menu','map_data_form')" );
 	}
 	
 	this.draw = function()
 	{
-		this.viewPort.renderMap( this.tileMap );
+		this.viewPort.renderMap( this.tileMap, this.activeLayer );
 	}
 	
 	this.onMouseMove = function( inst )
@@ -353,7 +369,7 @@ function Mapper()
 			{	
 				if( inst.doPaint )
 				{
-					inst.mapData[LVL_GFX][idx] = gTileBrowser.tileValue;
+					inst.mapData[inst.activeLayer][idx] = gTileBrowser.tileValue;
 					inst.tileMap.setDirtyIdx( idx );
 				}
 				
@@ -379,7 +395,7 @@ function Mapper()
 		return function( e )
 		{
 			inst.doPaint = true;
-			inst.mapData[LVL_GFX][inst.pickIdx] = gTileBrowser.tileValue;
+			inst.mapData[inst.activeLayer][inst.pickIdx] = gTileBrowser.tileValue;
 			inst.tileMap.setDirtyIdx( inst.pickIdx );
 			inst.draw();
 		}
@@ -512,10 +528,10 @@ function showMapData( menu, form )
 			var elem = formRoot.elements['data'];
 			elem.innerHTML = "";
 			
-			elem.innerHTML = gMapper.mapData[LVL_GFX][0];
-			for( i=1; i<gMapper.mapData[LVL_GFX].length; ++i )
+			elem.innerHTML = gMapper.mapData[gMapper.activeLayer][0];
+			for( i=1; i<gMapper.mapData[gMapper.activeLayer].length; ++i )
 			{
-				elem.innerHTML += "," + gMapper.mapData[LVL_GFX][i];
+				elem.innerHTML += "," + gMapper.mapData[gMapper.activeLayer][i];
 			}
 			elem.innerText = elem.innerHTML;
 		}
@@ -602,14 +618,17 @@ function loadMap( menu, form )
 			var reader = new FileReader();  
 			reader.onloadend = function( e )
 			{
-				gMapper = new Mapper();
-				gMapper.setup( w, h );
+				if( !gMapper )
+				{
+					gMapper = new Mapper();
+					gMapper.setup( w, h );
+				}
+				
 				var arr = e.target.result.split(',');
-
 				var cnt = Math.min( w * h, arr.length );
 				for( var i=0; i<cnt; ++i )
 				{
-					gMapper.mapData[LVL_GFX][i] = parseInt( arr[i], 10 );
+					gMapper.mapData[gMapper.activeLayer][i] = parseInt( arr[i], 10 );
 				}
 				gMapper.tileMap.setData( gMapper.mapData );
 				gMapper.draw();
@@ -650,4 +669,24 @@ function showInfo( menu, form, info )
 		menuRoot.style.display = 'none';
 		gMenuOpen = false;
 	};	
+}
+
+
+function layerMapData( menu, form, info )
+{
+	if( gMapper.activeLayer == LVL_GFX )
+	{
+		gMapper.setActiveLayer( LVL_PHY )
+		showInfo("info_menu", "info_form", "LVL_PHY now active" );
+	}
+	else if( gMapper.activeLayer == LVL_PHY )
+	{
+		gMapper.setActiveLayer( LVL_SFX )
+		showInfo("info_menu", "info_form", "LVL_SFX now active" );
+	}
+	else
+	{
+		gMapper.setActiveLayer( LVL_GFX )
+		showInfo("info_menu", "info_form", "LVL_GFX now active" );
+	}
 }

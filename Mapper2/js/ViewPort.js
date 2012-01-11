@@ -25,7 +25,7 @@ function ViewPort( x, y, w, h, ctx )
 	// -----------------------------------------------------------------
 	// render a tile map using the viewport
 	// -----------------------------------------------------------------
-	this.renderMap = function( map )
+	this.renderMap = function( map, layer )
 	{
 		this.forceDirty = false;
 		this.update( map );
@@ -43,10 +43,20 @@ function ViewPort( x, y, w, h, ctx )
 				if( map.dirtyFlags[idx] || this.margin )
 				{
 					map.dirtyFlags[idx] = 0;
-					map.gfx.draw( this.context, 
-						( i - x ) * map.gfx.tileW - this.pxOffset.x,
-						( j - y ) * map.gfx.tileH - this.pxOffset.y,
-						map.tileData[LVL_GFX][idx] );
+					if( layer != LVL_GFX && map.tileData[layer][idx] != 0 )
+					{
+						map.gfx.draw( this.context, 
+							( i - x ) * map.gfx.tileW - this.pxOffset.x,
+							( j - y ) * map.gfx.tileH - this.pxOffset.y,
+							map.tileData[layer][idx] );
+					}
+					else
+					{					
+						map.gfx.draw( this.context, 
+							( i - x ) * map.gfx.tileW - this.pxOffset.x,
+							( j - y ) * map.gfx.tileH - this.pxOffset.y,
+							map.tileData[LVL_GFX][idx] );
+					}
 				}
 			}
 		}
