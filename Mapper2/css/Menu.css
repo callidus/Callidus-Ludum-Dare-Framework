@@ -442,8 +442,35 @@ please see licence.txt
 	float: right;
 }
 
+.popup .selecta {
+	font-size: 9pt;
+	border: 1px solid #666666;
+	font-size: 10px;
+	background-color: #CCCCCC;
+	width: 50%;
+	float: left;
+}
+
+.popup p {
+	width: 50%;
+	float: left;
+	margin: 0px;
+	padding: 0px;
+	padding-bottom: 5px;
+}
+
 .popup .submit {
 	clear:both;
 	margin-top: 20px;
 }
 
+.popup .thumbnail {
+	width: 64;
+	height: 64;
+	border: 1px solid gray;
+	float: right;
+}
+
+.clear {
+	clear: both;
+}

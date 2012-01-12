@@ -40,46 +40,51 @@ function TileBrowser()
 	{
 		return function( e )
 		{
-			inst.tileMenu = document.getElementById( "tile_menu" );
-			inst.canvas = document.getElementById( "tile_canvas" );
-			inst.context  = inst.canvas.getContext( '2d' );
-			
-			var j = ( inst.h * inst.w );
-			inst.mapData[LVL_GFX] = new Array();
-			inst.mapData[LVL_PHY] = null;
-			inst.mapData[LVL_SFX] = null;
-			
-			for( i=0; i<j; ++i )
-			{
-				inst.mapData[LVL_GFX][i] = i;
-			}
-			
-			j /= 3;
-			inst.tileGraphic = new TileGraphic( e.target.result, inst.h, inst.w );
-			inst.tileMap = new TileMap( inst.tileGraphic, 3, j );
-			inst.tileMap.setData( inst.mapData );
-			
-			inst.canvas.width = 3 * inst.tileGraphic.tileRealW 
-			inst.canvas.height = j * inst.tileGraphic.tileRealH 
-			
-			inst.viewPort = new ViewPort( 0, 0, 3, j, inst.context );
-			inst.tileMap.refresh();
-			inst.show();
-			inst.draw();
-			
-			inst.canvas.onmousemove		= inst.onMouseMove( inst );
-			inst.canvas.onmouseup		= inst.onMouseUp( inst );
-			inst.tileMenu.onmouseout	= inst.onMouseOut( inst );
-			
-			inst.selectIdx = 0;
-			inst.drawSelection();
-
-			// gMenuTab from Menu.js - i dont like this being here
-			// i also dont like using hard coded id values
-			gMenuTab["new_map"].enable( "newMap('new_map_menu','new_map_form')" );
-			gMenuTab["open_map"].enable( "loadMap('load_map_menu','load_map_form')" );
+			inst.finaliseLoad( new TileGraphic( e.target.result, inst.h, inst.w ) );
 		}
 	};
+	
+	this.finaliseLoad = function( gfx )
+	{
+		this.tileMenu = document.getElementById( "tile_menu" );
+		this.canvas = document.getElementById( "tile_canvas" );
+		this.context  = this.canvas.getContext( '2d' );
+		
+		var j = ( this.h * this.w );
+		this.mapData[LVL_GFX] = new Array();
+		this.mapData[LVL_PHY] = null;
+		this.mapData[LVL_SFX] = null;
+		
+		for( i=0; i<j; ++i )
+		{
+			this.mapData[LVL_GFX][i] = i;
+		}
+		
+		j /= 3;
+		this.tileGraphic = gfx;
+		this.tileMap = new TileMap( this.tileGraphic, 3, j );
+		this.tileMap.setData( this.mapData );
+		
+		this.canvas.width = 3 * this.tileGraphic.tileRealW 
+		this.canvas.height = j * this.tileGraphic.tileRealH 
+		
+		this.viewPort = new ViewPort( 0, 0, 3, j, this.context );
+		this.tileMap.refresh();
+		this.show();
+		this.draw();
+		
+		this.canvas.onmousemove		= this.onMouseMove( this );
+		this.canvas.onmouseup		= this.onMouseUp( this );
+		this.tileMenu.onmouseout	= this.onMouseOut( this );
+		
+		this.selectIdx = 0;
+		this.drawSelection();
+
+		// gMenuTab from Menu.js - i dont like this being here
+		// i also dont like using hard coded id values
+		gMenuTab["new_map"].enable( "newMap('new_map_menu','new_map_form')" );
+		gMenuTab["open_map"].enable( "loadMap('load_map_menu','load_map_form')" );
+	}
 	
 	this.draw = function()
 	{
@@ -198,6 +203,13 @@ function TileBrowser()
 };
 
 
+function loadTileDefault( select )
+{
+	var thumb = document.getElementById("tile_thumbnail");
+	var val = select.options[select.selectedIndex].value;
+	thumb.src = "img/" + val + "_thumb.png";
+}
+
 var gTileBrowser = null;
 var gMenuOpen = false;
 function loadTileSheet( menu, form )
@@ -222,6 +234,20 @@ function loadTileSheet( menu, form )
 					gMenuOpen = false;
 				};
 				
+				close = function( w, h, url )
+				{
+					gTileBrowser = new TileBrowser();
+					gTileBrowser.w = w;
+					gTileBrowser.h = h;
+					if( url )
+					{
+						gTileBrowser.finaliseLoad( new TileGraphic( url, h, w ) );
+					}
+					menuRoot.style.visibility = 'hidden';
+					menuRoot.style.display = 'none';
+					gMenuOpen = false;
+				}
+				
 				// load file sheet
 				formRoot.elements['load'].onclick = function( e ) 
 				{
@@ -231,28 +257,35 @@ function loadTileSheet( menu, form )
 					
 					if( !isNaN( w ) && !isNaN( h ) )
 					{
-						gTileBrowser = new TileBrowser();
-						gTileBrowser.w = w;
-						gTileBrowser.h = h;
-						menuRoot.style.visibility = 'hidden';
-						menuRoot.style.display = 'none';
-						gMenuOpen = false;
+						close( w, h );
+						var file = formRoot.elements["path"].files[0];
+						var imageType = /image.*/;  
+						if( file.type.match( imageType ) ) 
+						{  
+							var reader = new FileReader();  
+							reader.onloadend = gTileBrowser.onLoad( gTileBrowser );
+							reader.readAsDataURL( file ); 
+						}
 					}
 					else
 					{
-						showInfo("info_menu", "info_form", 
-							"Sorry, Invalid Input: width=" + formRoot.elements["width"].value + 
-							" and height=" + formRoot.elements["height"].value );
+						var select = formRoot.elements['defaults'];
+						switch( select.options[select.selectedIndex].value )
+						{
+							case "default_tiles_1":
+								close( 39, 1, "img/default_tiles_1.png" );
+								break;
+								
+							case "default_tiles_2":
+								close( 6, 6, "img/default_tiles_2.png" );
+								break;
+								
+							default:
+								showInfo("info_menu", "info_form", 
+								"Sorry, Invalid Input: width=" + formRoot.elements["width"].value + 
+								" and height=" + formRoot.elements["height"].value );
+						}
 						return;
-					}
-					
-					var file = formRoot.elements["path"].files[0];
-					var imageType = /image.*/;  
-					if( file.type.match( imageType ) ) 
-					{  
-						var reader = new FileReader();  
-						reader.onloadend = gTileBrowser.onLoad( gTileBrowser );
-						reader.readAsDataURL( file ); 
 					}
 				};
 			}
