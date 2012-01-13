@@ -6,12 +6,6 @@ please see licence.txt
 -->
  */
 
-
-var LVL_GFX = 0;
-var LVL_PHY = 1;
-var LVL_SFX = 2;
-var LVL_MAX = 3;
-
 // ---------------------------------------------------------------------
 // a map
 // ---------------------------------------------------------------------
@@ -23,21 +17,11 @@ function TileMap( tileGfx, w, h )
 	
 	this.gfx = tileGfx;
 	this.tileData = new Array();
-	for( i=0; i<LVL_MAX; ++i )
-	{
-		this.tileData[i] = null;
-	}
-	
 	this.dirtyFlags = new Array();
 
-	// what to draw
 	this.setData = function( data )
 	{
-		for( i=0; i<LVL_MAX; ++i )
-		{
-			this.tileData[i] = data[i];
-		}
-		this.refresh();
+		this.tileData = data; // ref
 	}
 	
 	this.setViewPortRect = function( rect )
@@ -48,7 +32,7 @@ function TileMap( tileGfx, w, h )
 	// refresh
 	this.refresh = function()
 	{
-		for( i=0; i<this.tileData[LVL_GFX].length; ++i )
+		for( i=0; i<this.tileData[0].length; ++i )
 		{
 			this.dirtyFlags[i] = 1;
 		}
@@ -137,6 +121,7 @@ function TileMap( tileGfx, w, h )
 		return false;
 	}
 	
+	/*
 	this.findSfx = function( idx, find )
 	{
 		for( i=idx; i<this.tileData[LVL_SFX].length; ++i )
@@ -148,6 +133,5 @@ function TileMap( tileGfx, w, h )
 		}
 		return null;
 	}
-	
-
+	*/
 }

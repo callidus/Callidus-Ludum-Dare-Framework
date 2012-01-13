@@ -51,13 +51,11 @@ function TileBrowser()
 		this.context  = this.canvas.getContext( '2d' );
 		
 		var j = ( this.h * this.w );
-		this.mapData[LVL_GFX] = new Array();
-		this.mapData[LVL_PHY] = null;
-		this.mapData[LVL_SFX] = null;
+		this.mapData[0] = new Array();
 		
 		for( i=0; i<j; ++i )
 		{
-			this.mapData[LVL_GFX][i] = i;
+			this.mapData[0][i] = i;
 		}
 		
 		j /= 3;
@@ -88,7 +86,7 @@ function TileBrowser()
 	
 	this.draw = function()
 	{
-		this.viewPort.renderMap( this.tileMap, LVL_GFX );
+		this.viewPort.renderMap( this.tileMap, 0 );
 	}
 	
 	this.show = function()
@@ -178,7 +176,7 @@ function TileBrowser()
 			inst.tileMap.setDirtyIdx( inst.selectIdx );
 				
 			inst.selectIdx = inst.pickIdx;
-			inst.tileValue = inst.mapData[LVL_GFX][inst.selectIdx];
+			inst.tileValue = inst.mapData[0][inst.selectIdx];
 			inst.tileMap.setDirtyIdx( inst.selectIdx );
 			inst.draw();
 			
@@ -311,7 +309,18 @@ function Mapper()
 	this.context = null;
 	this.pickIdx = 0;
 	this.doPaint = false;
-	this.activeLayer = LVL_GFX;
+	this.activeLayer = 0;
+
+	this.addLayer = function()
+	{
+		var j = ( this.h * this.w );
+		var l = this.mapData.length;
+		this.mapData[l] = new Array();
+		for( var i=0; i<j; ++i )
+		{
+			this.mapData[l][i] = 0;
+		}
+	}
 	
 	this.setActiveLayer = function( layer )
 	{
@@ -326,37 +335,36 @@ function Mapper()
 		this.w = w;
 		this.h = h;
 		
-		var j = ( h * w );
-		this.mapData[LVL_GFX] = new Array();
-		this.mapData[LVL_PHY] = new Array();
-		this.mapData[LVL_SFX] = new Array();
-		
-		for( i=0; i<j; ++i )
-		{
-			this.mapData[LVL_GFX][i] = 0;
-			this.mapData[LVL_PHY][i] = 0;
-			this.mapData[LVL_SFX][i] = 0;
-		}
-		
 		if( old )
 		{
 			var tH = Math.min( old.h, h );
 			var tW = Math.min( old.w, w );
-			
-			for( var y=0; y<tH; ++y )
+			var tZ = old.mapData.length;
+			for( var z=0; z<tZ; ++z )
 			{
-				for( var x=0; x<tW; ++x )
+				this.mapData[z] = new Array();
+			}
+			
+			for( var z=0; z<tZ; ++z )
+			{
+				for( var y=0; y<tH; ++y )
 				{
-					this.mapData[LVL_GFX][x + y * w] = 
-						old.mapData[LVL_GFX][x + y * old.w];
-						
-					this.mapData[LVL_PHY][x + y * w] = 
-						old.mapData[LVL_PHY][x + y * old.w];
-						
-					this.mapData[LVL_SFX][x + y * w] = 
-						old.mapData[LVL_SFX][x + y * old.w];
+					for( var x=0; x<tW; ++x )
+					{
+						this.mapData[z][x + y * w] = old.mapData[z][x + y * old.w];
+					}
 				}
 			}
+		}
+		else
+		{
+			var j = ( h * w );
+			this.mapData[0] = new Array();
+			for( i=0; i<j; ++i )
+			{
+				this.mapData[0][i] = 0;
+			}
+
 		}
 				
 		this.tileGraphic = gTileBrowser.tileGraphic;
@@ -723,6 +731,7 @@ function makeNewLayer( menu, form )
 			var sel = document.getElementById( "layers" )
 			var len = sel.length;
 			
+			gMapper.addLayer(); // TODO: need name .... ?
 			sel.options[len] = new Option(elem.value + " (" + len + ")", len);
 			menuRoot.style.visibility = 'hidden';
 			menuRoot.style.display = 'none';
@@ -737,6 +746,13 @@ function makeNewLayer( menu, form )
 		menuRoot.style.display = 'none';
 		gMenuOpen = false;
 	};
+}
+
+function setLayer( idx )
+{
+	gMapper.setActiveLayer( idx );
+	gMapper.viewPort.refresh( gMapper.tileMap );
+	gMapper.draw();
 }
 
 function layerMapData( menu, form, info )

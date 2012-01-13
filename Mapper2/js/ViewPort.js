@@ -43,7 +43,7 @@ function ViewPort( x, y, w, h, ctx )
 				if( map.dirtyFlags[idx] || this.margin )
 				{
 					map.dirtyFlags[idx] = 0;
-					if( layer != LVL_GFX && map.tileData[layer][idx] != 0 )
+					if( layer != 0 && map.tileData[layer][idx] != 0 )
 					{
 						map.gfx.draw( this.context, 
 							( i - x ) * map.gfx.tileW - this.pxOffset.x,
@@ -55,7 +55,7 @@ function ViewPort( x, y, w, h, ctx )
 						map.gfx.draw( this.context, 
 							( i - x ) * map.gfx.tileW - this.pxOffset.x,
 							( j - y ) * map.gfx.tileH - this.pxOffset.y,
-							map.tileData[LVL_GFX][idx] );
+							map.tileData[0][idx] );
 					}
 				}
 			}
@@ -70,7 +70,7 @@ function ViewPort( x, y, w, h, ctx )
 				map.gfx.draw( this.context, 
 						-map.gfx.tileW - this.pxOffset.x,
 						( j - y ) * map.gfx.tileH - this.pxOffset.y,
-						map.tileData[LVL_GFX][idx] );
+						map.tileData[0][idx] );
 			}
 		}
 		
@@ -83,7 +83,7 @@ function ViewPort( x, y, w, h, ctx )
 				map.gfx.draw( this.context, 
 						( j - x ) * map.gfx.tileW - this.pxOffset.x,
 						-map.gfx.tileH - this.pxOffset.y,
-						map.tileData[LVL_GFX][idx] );
+						map.tileData[0][idx] );
 			}
 		}
 	}
