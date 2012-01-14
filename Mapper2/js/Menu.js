@@ -219,3 +219,10 @@ function dragStop(event)
 }
 // ---------------------------------------------------------------------
 
+function stopReturnKey(event)
+{
+    //alert(event.which);
+    if(event.which == 13) event.preventDefault();
+	else if(window.event.keyCode == 13) return false;
+    else return true;
+}

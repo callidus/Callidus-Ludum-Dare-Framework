@@ -402,6 +402,10 @@ function Mapper()
 		gMenuTab["resize_map"].enable( "resizeMap('resize_map_menu','resize_map_form')" );
 		gMenuTab["save_map"].enable( "showMapData('map_data_menu','map_data_form')" );
 		gMenuTab["new_layer"].enable( "makeNewLayer('new_layer_menu','new_layer_form')" );
+		
+		// HACK: turn this into a button ....
+		var sel = document.getElementById( "layer_select" );
+		sel.setAttribute( "class", "styled-select" );
 	}
 	
 	this.draw = function()
@@ -737,7 +741,7 @@ function makeNewLayer( menu, form )
 	var formRoot = document.getElementById( form );
 	if( menuRoot && formRoot )
 	{
-		var elem = formRoot.elements["name"];
+		var elem = formRoot.elements["layer"];
 		elem.innerHTML = "";
 		gMenuOpen = true;
 		
@@ -745,7 +749,7 @@ function makeNewLayer( menu, form )
 		menuRoot.style.display = 'block';
 		
 		// ok it
-		formRoot.elements['ok'].onclick = function( e ) 
+		formRoot.elements['load'].onclick = function( e ) 
 		{
 			var sel = document.getElementById( "layers" )
 			var len = sel.length;
@@ -772,23 +776,4 @@ function setLayer( idx )
 	gMapper.setActiveLayer( idx );
 	gMapper.viewPort.refresh( gMapper.tileMap );
 	gMapper.draw();
-}
-
-function layerMapData( menu, form, info )
-{
-	if( gMapper.activeLayer == LVL_GFX )
-	{
-		gMapper.setActiveLayer( LVL_PHY )
-		showInfo("info_menu", "info_form", "LVL_PHY now active" );
-	}
-	else if( gMapper.activeLayer == LVL_PHY )
-	{
-		gMapper.setActiveLayer( LVL_SFX )
-		showInfo("info_menu", "info_form", "LVL_SFX now active" );
-	}
-	else
-	{
-		gMapper.setActiveLayer( LVL_GFX )
-		showInfo("info_menu", "info_form", "LVL_GFX now active" );
-	}
 }
