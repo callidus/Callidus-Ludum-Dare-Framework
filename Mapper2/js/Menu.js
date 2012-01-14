@@ -111,9 +111,6 @@ dragObj.zIndex = 0;
 
 function sizeStart( event, id )
 {
-	var el;
-	var x, y;
-
 	if (id)
 	{
 		dragObj.elNode = document.getElementById( id );
@@ -129,11 +126,13 @@ function sizeStart( event, id )
 		}
 	}
 	
-	dragObj.elStartLeft  = parseInt(dragObj.elNode.style.left, 10);
-	dragObj.elStartTop   = parseInt(dragObj.elNode.style.top,  10);
-
-	if (isNaN(dragObj.elStartLeft)) dragObj.elStartLeft = dragObj.elNode.offsetLeft;
-	if (isNaN(dragObj.elStartTop))  dragObj.elStartTop  = dragObj.elNode.offsetTop;
+	dragObj.cursorStartX  = event.clientX + window.scrollX;
+	dragObj.cursorStartY  = event.clientY + window.scrollY;
+	dragObj.elStartHeight = parseInt(dragObj.elNode.style.height, 10);
+	dragObj.elStartWidth  = parseInt(dragObj.elNode.style.width, 10);
+	
+	if (isNaN(dragObj.elStartHeight)) dragObj.elStartHeight = dragObj.elNode.clientHeight;
+	if (isNaN(dragObj.elStartWidth)) dragObj.elStartWidth = dragObj.elNode.clientWidth;
 	
 	// Update element's z-index.
 	dragObj.elNode.style.zIndex = ++dragObj.zIndex;
@@ -153,8 +152,7 @@ function sizeGo(event)
 	y = event.clientY + window.scrollY;
 
 	// Move drag element by the same amount the cursor has moved.
-	//dragObj.elNode.style.width = (dragObj.elStartLeft + x - dragObj.cursorStartX) + "px";
-	dragObj.elNode.style.height = ( ( y - dragObj.cursorStartY ) ) + "px"; // - dragObj.elStartTop ) + "px";
+	dragObj.elNode.style.height = dragObj.elStartHeight + ( ( y - dragObj.cursorStartY ) ) + "px";
 	event.preventDefault();
 }
 
@@ -167,9 +165,6 @@ function sizeStop(event)
 
 function dragStart( event, id ) 
 {
-	var el;
-	var x, y;
-
 	if (id)
 	{
 		dragObj.elNode = document.getElementById( id );
@@ -185,12 +180,8 @@ function dragStart( event, id )
 		}
 	}
 
-	// Get cursor position with respect to the page.
-	x = event.clientX + window.scrollX;
-	y = event.clientY + window.scrollY;
-
-	dragObj.cursorStartX = x;
-	dragObj.cursorStartY = y;
+	dragObj.cursorStartX = event.clientX + window.scrollX;
+	dragObj.cursorStartY = event.clientY + window.scrollY;
 	dragObj.elStartLeft  = parseInt(dragObj.elNode.style.left, 10);
 	dragObj.elStartTop   = parseInt(dragObj.elNode.style.top,  10);
 
