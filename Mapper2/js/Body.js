@@ -401,11 +401,11 @@ function Mapper()
 		
 		gMenuTab["resize_map"].enable( "resizeMap('resize_map_menu','resize_map_form')" );
 		gMenuTab["save_map"].enable( "showMapData('map_data_menu','map_data_form')" );
-		gMenuTab["new_layer"].enable( "makeNewLayer('new_layer_menu','new_layer_form')" );
+		//gMenuTab["new_layer"].enable( "makeNewLayer('new_layer_menu','new_layer_form')" );
 		
 		// HACK: turn this into a button ....
-		var sel = document.getElementById( "layer_select" );
-		sel.setAttribute( "class", "styled-select" );
+		//var sel = document.getElementById( "layer_select" );
+		//sel.setAttribute( "class", "styled-select" );
 	}
 	
 	this.draw = function()
