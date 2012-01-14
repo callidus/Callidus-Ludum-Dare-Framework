@@ -16,6 +16,7 @@ It is (c) Tim Kelsey 2012 and released under the MIT License\n\
 ----------------------------\n\
 v0.3 Second Public Release.\n\
 - Fixed several UI bugs\n\
+- Added unit selector for tile size\n\
 - Added status pannel and tile info\n\
 - Added default tiles for demo\n\n\
 v0.2 First Public Release.\n"

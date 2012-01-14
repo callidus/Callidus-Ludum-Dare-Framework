@@ -10,11 +10,7 @@ function resize()
 { 
 	var windowheight = window.innerHeight;
 	var frame = document.getElementById( "container" ); 
-	
-	//windowheight = ( windowheight / 100 ) * 95;	// 95%
-	//frame.style.height = windowheight + "px";
-	
-	// HACK - fix inner height
+
 	frame = document.getElementById( "body_main_inner" ); 
 	frame.style.height = windowheight - 132 + "px";
 }
@@ -36,19 +32,6 @@ function TileBrowser()
 	this.selectIdxNotify = null;
 	this.tileValue = 0;
 	this.statusBar = null
-
-	this.onLoad = function( inst )
-	{
-		return function( e )
-		{
-			var img = e.target.result;
-			img.onload = function()
-			{
-				var gfx = new TileGraphic( img, h, w  );
-				gTileBrowser.finaliseLoad( gfx );
-			}
-		}
-	};
 	
 	this.finaliseLoad = function( gfx )
 	{
@@ -240,17 +223,25 @@ function loadTileSheet( menu, form )
 					gMenuOpen = false;
 				};
 				
-				close = function( w, h, url )
+				close = function( w, h, pix, url )
 				{
 					gTileBrowser = new TileBrowser();
-					gTileBrowser.w = w;
-					gTileBrowser.h = h;
 					if( url )
 					{
 						var img = new Image();
 						img.onload = function()
 						{
-							var gfx = new TileGraphic( img, h, w  );
+							if( pix ) // size given in pix per tile, convert
+							{
+								gTileBrowser.w = this.width / w;
+								gTileBrowser.h = this.height / h;
+							}
+							else
+							{
+								gTileBrowser.w = w;
+								gTileBrowser.h = h;
+							}
+							var gfx = new TileGraphic( this, gTileBrowser.h, gTileBrowser.w  );
 							gTileBrowser.finaliseLoad( gfx );
 						}
 						img.src = url;
@@ -266,16 +257,19 @@ function loadTileSheet( menu, form )
 					// load stuff
 					var w = parseInt( formRoot.elements["width"].value );
 					var h = parseInt( formRoot.elements["height"].value );
+					var pix = formRoot.elements["units"][0].checked;
 					
 					if( !isNaN( w ) && !isNaN( h ) )
 					{
-						close( w, h );
 						var file = formRoot.elements["path"].files[0];
 						var imageType = /image.*/;  
 						if( file.type.match( imageType ) ) 
 						{  
 							var reader = new FileReader();  
-							reader.onloadend = gTileBrowser.onLoad( gTileBrowser );
+							reader.onloadend = function( e )
+							{
+								close( w, h, pix, e.target.result );
+							}
 							reader.readAsDataURL( file ); 
 						}
 					}
@@ -285,11 +279,11 @@ function loadTileSheet( menu, form )
 						switch( select.options[select.selectedIndex].value )
 						{
 							case "default_tiles_1":
-								close( 39, 1, "img/default_tiles_1.png" );
+								close( 39, 1, false, "img/default_tiles_1.png" );
 								break;
 								
 							case "default_tiles_2":
-								close( 6, 6, "img/default_tiles_2.png" );
+								close( 6, 6, false, "img/default_tiles_2.png" );
 								break;
 								
 							default:
