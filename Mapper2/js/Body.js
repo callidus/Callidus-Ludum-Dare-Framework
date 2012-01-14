@@ -11,12 +11,12 @@ function resize()
 	var windowheight = window.innerHeight;
 	var frame = document.getElementById( "container" ); 
 	
-	windowheight = ( windowheight / 100 ) * 95;	// 95%
-	frame.style.height = windowheight + "px";
+	//windowheight = ( windowheight / 100 ) * 95;	// 95%
+	//frame.style.height = windowheight + "px";
 	
 	// HACK - fix inner height
 	frame = document.getElementById( "body_main_inner" ); 
-	frame.style.height = windowheight - 84 + "px";
+	frame.style.height = windowheight - 132 + "px";
 }
 
 
@@ -35,17 +35,24 @@ function TileBrowser()
 	this.selectIdx = 0;
 	this.selectIdxNotify = null;
 	this.tileValue = 0;
+	this.statusBar = null
 
 	this.onLoad = function( inst )
 	{
 		return function( e )
 		{
-			inst.finaliseLoad( new TileGraphic( e.target.result, inst.h, inst.w ) );
+			var img = e.target.result;
+			img.onload = function()
+			{
+				var gfx = new TileGraphic( img, h, w  );
+				gTileBrowser.finaliseLoad( gfx );
+			}
 		}
 	};
 	
 	this.finaliseLoad = function( gfx )
 	{
+		this.statusBar = document.getElementById( "status_bar" );
 		this.tileMenu = document.getElementById( "tile_menu" );
 		this.canvas = document.getElementById( "tile_canvas" );
 		this.context  = this.canvas.getContext( '2d' );
@@ -135,6 +142,7 @@ function TileBrowser()
 				
 				inst.pickIdx = idx;
 				inst.refresh = false;
+				inst.statusBar.innerHTML = "<p>Tiles Index: " + idx + "</p>";
 			}
 		}
 	}
@@ -239,7 +247,13 @@ function loadTileSheet( menu, form )
 					gTileBrowser.h = h;
 					if( url )
 					{
-						gTileBrowser.finaliseLoad( new TileGraphic( url, h, w ) );
+						var img = new Image();
+						img.onload = function()
+						{
+							var gfx = new TileGraphic( img, h, w  );
+							gTileBrowser.finaliseLoad( gfx );
+						}
+						img.src = url;
 					}
 					menuRoot.style.visibility = 'hidden';
 					menuRoot.style.display = 'none';
@@ -310,6 +324,7 @@ function Mapper()
 	this.pickIdx = 0;
 	this.doPaint = false;
 	this.activeLayer = 0;
+	this.statusBar = null;
 
 	this.addLayer = function()
 	{
@@ -329,7 +344,8 @@ function Mapper()
 	}
 	
 	this.setup = function( w, h, old )
-	{		
+	{
+		this.statusBar = document.getElementById( "status_bar" );
 		this.canvas = document.getElementById( "map_canvas" );
 		this.context  = this.canvas.getContext( '2d' );
 		this.w = w;
@@ -427,6 +443,9 @@ function Mapper()
 				
 				inst.pickIdx = idx;
 				inst.refresh = false;
+				
+				var val = inst.mapData[inst.activeLayer][idx];
+				inst.statusBar.innerHTML = "<p>Tile Index: " + idx + " Value: " + val + " (Active Layer)</p>";
 			}
 		}
 	}

@@ -307,6 +307,44 @@ please see licence.txt
 	height: 25px;
 }
 
+#status_bar {
+	height: 20px;
+	width: 100%;
+	
+	background-image: linear-gradient(bottom, #F2F2F2 42%, #E2E2E2 74%, #FFFFFF 86%);
+	background-image: -o-linear-gradient(bottom, #F2F2F2 42%, #E2E2E2 74%, #FFFFFF 86%);
+	background-image: -moz-linear-gradient(bottom, #F2F2F2 42%, #E2E2E2 74%, #FFFFFF 86%);
+	background-image: -webkit-linear-gradient(bottom, #F2F2F2 42%, #E2E2E2 74%, #FFFFFF 86%);
+	background-image: -ms-linear-gradient(bottom, #F2F2F2 42%, #E2E2E2 74%, #FFFFFF 86%);
+
+	background-image: -webkit-gradient(
+		linear,
+		left bottom,
+		left top,
+		color-stop(0.42, #F2F2F2),
+		color-stop(0.74, #E2E2E2),
+		color-stop(0.86, #FFFFFF)
+	);
+	
+	vertical-align: middle;
+	
+	/*-moz-border-radius-bottomrigth: 10px;
+	border-bottom-right-radius: 10px;
+	
+	-moz-border-radius-bottomleft: 10px;
+	border-bottom-left-radius: 10px;*/
+}
+
+#status_bar p {
+	margin: 0px;
+	padding: 0px;
+	padding-left: 5px;
+	padding-top: 2px;
+	font-size: 10pt;
+	float: left;
+	vertical-align: middle;
+}
+
 .popup {
 	position: absolute;
 	/*position:fixed !important;*/

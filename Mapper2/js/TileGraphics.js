@@ -15,8 +15,7 @@ function TileGraphic( img, rows, cols )
 	this.rows = rows;
 	this.cols = cols;
 	
-	this.img = new Image();
-	this.img.src = img;
+	this.img = img;
 	
 	this.tileW = this.img.width / cols;
 	this.tileH = this.img.height / rows;
