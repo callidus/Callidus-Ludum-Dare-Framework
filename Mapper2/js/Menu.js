@@ -63,6 +63,7 @@ function initMenu( id, btn )
 		'save_map' : document.getElementById('save_map'),
 		'save_map_as' : document.getElementById('save_map_as'),
 		'new_layer' : document.getElementById('new_layer'),
+		'layer_select' : document.getElementById('layer_select'),
 		'show_hide' : document.getElementById('show_hide'),
 		'save_layer_as' : document.getElementById('save_layer_as'),
 		'delete_layer' : document.getElementById('delete_layer'),
@@ -76,14 +77,26 @@ function initMenu( id, btn )
 		{
 			var item = gMenuTab[key];
 			item.icon = document.getElementById( key + "_img" );
-			item.iconSrc = item.icon.src;
-			item.iconDisSrc = item.icon.src.slice( 0, -4 ) + "-dis.png";
+			if( item.icon )
+			{
+				item.iconSrc = item.icon.src;
+				item.iconDisSrc = item.icon.src.slice( 0, -4 ) + "-dis.png";
+			}
+			
 			item.onclick = function( e ){};
 			
 			item.enable = function( func )
 			{
-				this.icon.src = this.iconSrc;
-				this.setAttribute( "class", "button" );
+				if( this.icon )
+				{
+					this.icon.src = this.iconSrc;
+					this.setAttribute( "class", "button enabled icon" );
+				}
+				else
+				{
+					this.setAttribute( "class", "button enabled" );
+				}
+				
 				if( func )
 				{
 					this.setAttribute( "onClick", func );
@@ -92,8 +105,11 @@ function initMenu( id, btn )
 			
 			item.disable = function()
 			{
-				this.icon.src = this.iconDisSrc;
-				this.setAttribute( "class", "button_disabled" );
+				if( this.icon )
+				{
+					this.icon.src = this.iconDisSrc;
+				}
+				this.setAttribute( "class", "button" );
 				this.setAttribute( "onClick", "nullFunc()" );
 			}
 			

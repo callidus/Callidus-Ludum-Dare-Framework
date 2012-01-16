@@ -171,8 +171,8 @@ please see licence.txt
 	margin-left: 5px;
 }
 
+
 #container #menu_area #menu_body .button {
-	cursor:pointer;
 	float: left;
 	margin-left: 2px;
 	margin-right: 2px;
@@ -185,35 +185,7 @@ please see licence.txt
 	vertical-align: middle;
 	background-color: #DDDDDD;
 	
-	border: 1px solid rgb( 255, 184, 60 ); 
-	
-	-moz-border-radius-toprigth: 5px;
-	border-top-right-radius: 5px;
-	
-	-moz-border-radius-topleft: 5px;
-	border-top-left-radius: 5px;
-	
-	-moz-border-radius-bottomrigth: 5px;
-	border-bottom-right-radius: 5px;
-	
-	-moz-border-radius-bottomleft: 5px;
-	border-bottom-left-radius: 5px;
-}
-
-#container #menu_area #menu_body .button_disabled {
 	cursor:normal;
-	float: left;
-	margin-left: 2px;
-	margin-right: 2px;
-	padding-left: 2px;
-	padding-right: 2px;
-	padding-top: 5px;
-	padding-bottom: 5px;
-
-	display: table-cell; 
-	vertical-align: middle;
-	background-color: #DDDDDD;
-	
 	border: 1px solid #F2F2F2; 
 	
 	-moz-border-radius-toprigth: 5px;
@@ -229,7 +201,12 @@ please see licence.txt
 	border-bottom-left-radius: 5px;
 }
 
-#container #menu_area #menu_body .button:hover {
+#container #menu_area #menu_body .button.enabled {
+	cursor:pointer !important;
+	border: 1px solid rgb( 255, 184, 60 ) !important; 
+}
+
+#container #menu_area #menu_body .button.enabled.icon:hover {
 	background-image: linear-gradient(bottom, rgb(255,255,255) 0%, rgb(247,132,0) 59%, rgb(255,184,60) 84%);
 	background-image: -o-linear-gradient(bottom, rgb(255,255,255) 0%, rgb(247,132,0) 59%, rgb(255,184,60) 84%);
 	background-image: -moz-linear-gradient(bottom, rgb(255,255,255) 0%, rgb(247,132,0) 59%, rgb(255,184,60) 84%);
@@ -512,47 +489,22 @@ please see licence.txt
 	clear: both;
 }
 
-/* This is all a bit hacky - try and merge it with the normal button style stuff */
-.styled-select {
+.button.enabled .styled-select {
+	border: 1px solid #DDDDDD;
 	background: url(../img/go-down.png) no-repeat right #DDDDDD;
-	/*background-color: #DDDDDD;*/
-	float: left;
-	margin-left: 2px;
-	margin-right: 2px;
-	margin-top: 2px;
-	padding-left: 2px;
-	padding-right: 2px;
-	
-	-moz-border-radius-toprigth: 5px;
-	border-top-right-radius: 5px;
-	
-	-moz-border-radius-topleft: 5px;
-	border-top-left-radius: 5px;
-	
-	-moz-border-radius-bottomrigth: 5px;
-	border-bottom-right-radius: 5px;
-	
-	-moz-border-radius-bottomleft: 5px;
-	border-bottom-left-radius: 5px;
-	
-	border: 1px solid rgb( 255, 184, 60 ); 
-	height: 30px;
 }
 
-.styled-select.disable {
-	background: url(../img/go-down-dis.png) no-repeat right #DDDDDD !important;
-	border: 1px solid #DDDDDD !important;
+.button .styled-select {
+	border: 1px solid #DDDDDD;
+	background: url(../img/go-down-dis.png) no-repeat right #DDDDDD;
 }
 
 .styled-select select {
-	cursor:pointer;
+	cursor: pointer;
 	background: transparent;
 	padding: 2px;
 	font-size: 10px;
 	border: 1px solid #DDDDDD;
-	padding-top: 5px;
-	padding-bottom: 5px;
 	padding-right: 20px;
-	height: 100%;
 	-webkit-appearance: none
 }

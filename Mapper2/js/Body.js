@@ -313,6 +313,7 @@ function Mapper()
 	this.w = 0;
 	this.h = 0;
 	this.mapData = new Array;
+	this.layerNames = new Array;
 	this.canvas = null;
 	this.context = null;
 	this.pickIdx = 0;
@@ -320,21 +321,37 @@ function Mapper()
 	this.activeLayer = 0;
 	this.statusBar = null;
 
-	this.addLayer = function()
+	this.addLayer = function( name )
 	{
 		var j = ( this.h * this.w );
 		var l = this.mapData.length;
 		this.mapData[l] = new Array();
+		this.layerNames[l] = name;
 		for( var i=0; i<j; ++i )
 		{
 			this.mapData[l][i] = 0;
 		}
 	}
 	
+	this.delLayer = function()
+	{
+		var j = this.mapData.length-1;
+		for( var i=this.activeLayer; i<j; ++i )
+		{
+			this.mapData[i] = this.mapData[i+1];
+			this.layerNames[i] = this.layerNames[i+1];
+		}
+		this.mapData.length = j;
+		this.layerNames.length = j;
+		this.setActiveLayer( 0 );
+	}
+	
 	this.setActiveLayer = function( layer )
 	{
 		this.activeLayer = layer;
 		this.tileMap.refresh();
+		this.viewPort.refresh( gMapper.tileMap );
+		this.draw();
 	}
 	
 	this.setup = function( w, h, old )
@@ -362,6 +379,7 @@ function Mapper()
 					for( var x=0; x<tW; ++x )
 					{
 						this.mapData[z][x + y * w] = old.mapData[z][x + y * old.w];
+						this.layerNames[z] = old.layerNames[z];
 					}
 				}
 			}
@@ -370,13 +388,13 @@ function Mapper()
 		{
 			var j = ( h * w );
 			this.mapData[0] = new Array();
+			this.layerNames[0] = "Base Layer";
 			for( i=0; i<j; ++i )
 			{
 				this.mapData[0][i] = 0;
 			}
-
 		}
-				
+		
 		this.tileGraphic = gTileBrowser.tileGraphic;
 		this.tileMap = new TileMap( this.tileGraphic, w, h );
 		this.tileMap.setData( this.mapData );
@@ -395,11 +413,8 @@ function Mapper()
 		
 		gMenuTab["resize_map"].enable( "resizeMap('resize_map_menu','resize_map_form')" );
 		gMenuTab["save_map"].enable( "showMapData('map_data_menu','map_data_form')" );
-		//gMenuTab["new_layer"].enable( "makeNewLayer('new_layer_menu','new_layer_form')" );
-		
-		// HACK: turn this into a button ....
-		//var sel = document.getElementById( "layer_select" );
-		//sel.setAttribute( "class", "styled-select" );
+		gMenuTab["new_layer"].enable( "makeNewLayer('new_layer_menu','new_layer_form')" );
+		gMenuTab["layer_select"].enable( null );
 	}
 	
 	this.draw = function()
@@ -747,9 +762,10 @@ function makeNewLayer( menu, form )
 		{
 			var sel = document.getElementById( "layers" )
 			var len = sel.length;
+			var val = elem.value;
 			
-			gMapper.addLayer(); // TODO: need name .... ?
-			sel.options[len] = new Option(elem.value + " (" + len + ")", len);
+			gMapper.addLayer( val ); // TODO: need name .... ?
+			sel.options[len] = new Option( val + " (" + len + ")", len );
 			menuRoot.style.visibility = 'hidden';
 			menuRoot.style.display = 'none';
 			gMenuOpen = false;
@@ -767,7 +783,25 @@ function makeNewLayer( menu, form )
 
 function setLayer( idx )
 {
+	if( idx == 0 )
+	{
+		gMenuTab[ "delete_layer" ].disable();
+	}
+	else
+	{
+		gMenuTab[ "delete_layer" ].enable( "deleteLayer()" );
+	}
+	
 	gMapper.setActiveLayer( idx );
-	gMapper.viewPort.refresh( gMapper.tileMap );
-	gMapper.draw();
+}
+
+function deleteLayer()
+{
+	gMapper.delLayer();
+	var layerSelect = document.getElementById( "layers" );
+	layerSelect.options.length = 0;
+	for( var i=0; i<gMapper.layerNames.length; ++i )
+	{
+		layerSelect.options[ layerSelect.options.length ] = new Option( gMapper.layerNames[i] + " (" + i + ")" );
+	}
 }

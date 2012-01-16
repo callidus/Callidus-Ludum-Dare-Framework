@@ -60,34 +60,34 @@ please see licence.txt
 				<div id="menu_body">
 					<div id="map_menu" class="menu_contents">
 						<div class="form_box">
-							<div id="load_tile_sheet" title="Load Tile Sheet" class="button_disabled" >
+							<div id="load_tile_sheet" title="Load Tile Sheet" class="button disabled">
 								<img id="load_tile_sheet_img" src="img/document-open.png"/>
 							</div>
 						</div>
 						<div class="form_box">
-							<div id="new_map" title="New Map" class="button_disabled">
+							<div id="new_map" title="New Map" class="button disabled">
 								<img id="new_map_img" src="img/document-new.png"/>
 							</div>
-							<div id="open_map" title="Open Map" class="button_disabled">
+							<div id="open_map" title="Open Map" class="button disabled">
 								<img id="open_map_img" src="img/document-open.png"/>
 							</div>
-							<div id="resize_map" title="Resize Map" class="button_disabled">
+							<div id="resize_map" title="Resize Map" class="button disabled">
 								<img id="resize_map_img" src="img/view-fullscreen.png"/>
 							</div>
 						</div>
 						<div class="form_box">
-							<div id="save_map" title="Save" class="button_disabled">
+							<div id="save_map" title="Save" class="button disabled">
 								<img id="save_map_img" src="img/document-save.png"/>
 							</div>
-							<div id="save_map_as" title="Save As" class="button_disabled" onClick="saveMapAs(this.form)">
+							<div id="save_map_as" title="Save As" class="button disabled" onClick="saveMapAs(this.form)">
 								<img id="save_map_as_img" src="img/document-save-as.png"/>
 							</div>
 						</div>
 						<div class="form_box">
-							<div id="fill" title="Fill" class="button_disabled" onClick="newMap(this.form)">
+							<div id="fill" title="Fill" class="button disabled" onClick="newMap(this.form)">
 								<img id="fill_img" src="img/image-missing.png"/>
 							</div>
-							<div id="detail_fill" title="Detail Fill" class="button_disabled" onClick="newMap(this.form)">
+							<div id="detail_fill" title="Detail Fill" class="button disabled" onClick="newMap(this.form)">
 								<img id="detail_fill_img" src="img/image-missing.png"/>
 							</div>
 						</div>
@@ -96,13 +96,13 @@ please see licence.txt
 					<!-- LAYERS MENU -->
 					<div id="layers_menu" class="menu_contents">
 						<div class="form_box">
-							<div id="new_layer" title="New Layer" class="button_disabled" onClick="newLayer(this.form)">
+							<div id="new_layer" title="New Layer" class="button disabled" onClick="newLayer(this.form)">
 								<img id="new_layer_img" src="img/document-new.png"/>
 							</div>
-							<div id="delete_layer" title="Delete Layer" class="button_disabled" onClick="deleteLayer(this.form)">
+							<div id="delete_layer" title="Delete Layer" class="button disabled" onClick="deleteLayer(this.form)">
 								<img id="delete_layer_img" src="img/edit-delete.png"/>
 							</div>
-							<div id="save_layer_as" title="Save Layer As" class="button_disabled" onClick="saveLayerAs(this.form)">
+							<div id="save_layer_as" title="Save Layer As" class="button disabled" onClick="saveLayerAs(this.form)">
 								<img id="save_layer_as_img" src="img/document-save-as.png"/>
 							</div>
 						</div>
@@ -110,16 +110,18 @@ please see licence.txt
 							<form>
 								<!-- bit of a hack - turn this into a button -->
 								<div class="form_field">
-									<div class="styled-select disable" id="layer_select">
-										<select id="layers" title="Select Layer" onChange="setLayer(this.selectedIndex)">
-											<option>Base Layer</option>
-										</select>
+									<div class="button disabled" id="layer_select">
+										<div class="styled-select">
+											<select id="layers" title="Select Layer" onChange="setLayer(this.selectedIndex)">
+												<option>Base Layer</option>
+											</select>
+										</div>
 									</div>
 								</div>
 							</form>
 						</div>
 						<div class="form_box">
-							<div id="show_hide" title="Show/Hide" class="button_disabled" onClick="showHide(this.form)">
+							<div id="show_hide" title="Show/Hide" class="button disabled" onClick="showHide(this.form)">
 								<img id="show_hide_img" src="img/system-search.png"/>
 							</div>
 						</div>
