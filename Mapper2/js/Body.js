@@ -594,19 +594,90 @@ function showMapData( menu, form )
 		gMenuOpen = false;
 	};
 	
+	// refresh data
 	formRoot.elements['refresh'].onclick = function( e )
 	{
 		if( gMapper )
 		{
-			var elem = formRoot.elements['data'];
-			elem.innerHTML = "";
+			var prefixSize = false;
+			var layerNames = false;
+			var allLayers = false;
 			
-			elem.innerHTML = gMapper.mapData[gMapper.activeLayer][0];
-			for( i=1; i<gMapper.mapData[gMapper.activeLayer].length; ++i )
+			
+			doUpdate = function( idx )
 			{
-				elem.innerHTML += "," + gMapper.mapData[gMapper.activeLayer][i];
+				var max = idx+1;
+				var min = idx;
+				
+				var elem = formRoot.elements['data'];
+				elem.innerHTML = "";
+				
+				if( prefixSize )
+				{
+					elem.innerHTML += gMapper.w + "," + gMapper.h + ",";
+				}
+				
+				if( allLayers )
+				{
+					min = 0;
+					max = gMapper.layerNames.length;
+				}
+				
+				for( var j=min; j<max; ++j )
+				{
+					if( layerNames )
+					{
+						elem.innerHTML += gMapper.layerNames[j] + ",";
+					}
+					
+					elem.innerHTML += gMapper.mapData[j][0];
+					for( i=1; i<gMapper.mapData[j].length; ++i )
+					{
+						elem.innerHTML += "," + gMapper.mapData[j][i];
+					}
+					elem.innerHTML += ","
+				}
+				elem.innerHTML = elem.innerHTML.slice( 0, elem.innerHTML.length -= 1 );
+				elem.innerText = elem.innerHTML;
 			}
-			elem.innerText = elem.innerHTML;
+			
+			var list = formRoot.elements['save_layers'];
+			list.options.length = 0;
+			for( var i=0; i<gMapper.layerNames.length; ++i )
+			{
+				list.options[list.options.length] = new Option( gMapper.layerNames[i] + " (" + i + ")" );
+			}
+			
+			list.onchange = function( e )
+			{
+				doUpdate( this.selectedIndex )
+			}
+			
+			var prefixSizeBtn = formRoot.elements['prefix_size'];
+			prefixSize = prefixSizeBtn.checked;
+			prefixSizeBtn.onclick = function( e )
+			{
+				prefixSize = this.checked;
+				doUpdate( list.selectedIndex );
+			}
+			
+			var layerNamesBtn = formRoot.elements['layer_names'];
+			layerNames = layerNamesBtn.checked;
+			layerNamesBtn.onclick = function( e )
+			{
+				layerNames = this.checked;
+				doUpdate( list.selectedIndex );
+			}
+			
+			var allLayersBtn = formRoot.elements['all_layers'];
+			list.disabled = allLayers = allLayersBtn.checked;
+			allLayersBtn.onclick = function( e )
+			{
+				list.disabled = allLayers = this.checked;
+				doUpdate( list.selectedIndex );
+			}
+			
+			doUpdate( gMapper.activeLayer );
 		}
 	}
 	

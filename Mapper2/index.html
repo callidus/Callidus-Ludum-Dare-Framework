@@ -108,7 +108,6 @@ please see licence.txt
 						</div>
 						<div class="form_box">
 							<form>
-								<!-- bit of a hack - turn this into a button -->
 								<div class="form_field">
 									<div class="button disabled" id="layer_select">
 										<div class="styled-select">
@@ -246,21 +245,26 @@ please see licence.txt
 			<!-- show map data -->
 			<div id="map_data_menu" class="popup">
 				<div class="pop_up_head" onmousedown="dragStart(event, 'map_data_menu')">Map Data</div>
-				<div class="pop_up_body">
+				<div class="pop_up_body" style="height: 100%;">
 					<form id="map_data_form">
 						<div class="form_field">
-							<textarea name="data" rows="5" cols="50" disabled="disabled"></textarea>
+							<textarea name="data" rows="15" cols="50" disabled="disabled"></textarea>
 						</div>
-						<!-- div class="form_box_inner">
-							<label>Line Breaks:</label><input type="checkbox" name="breaks" value="Line Breaks" checked/>
-							<label>Comments:</label><input type="checkbox" name="comments" value="Comments" checked/>
-						</div -->
+						<div class="form_box_inner">
+							<input type="checkbox" name="all_layers"><label>All Layers</label></input>
+							<input type="checkbox" name="prefix_size"><label>Prefix Size</label></input>
+							<input type="checkbox" name="layer_names"><label>Layer Names</label></input>
+						</div>
+						<div class="form_box_inner">
+							<label>Layer:</label><select name="save_layers"></select>
+						</div>
 						<div class="form_field">
 							<input type="button" name="close" value="Close" onClick="" class="submit" />
 							<input type="button" name="refresh" value="Refresh" onClick="" class="submit" />
 						</div>
 					</form>
 				</div>
+				<!-- div class="pop_up_tail" onmousedown="sizeStart(event, 'map_data_menu')"></div -->
 			</div>
 			
 			<div id="info_menu" class="popup">

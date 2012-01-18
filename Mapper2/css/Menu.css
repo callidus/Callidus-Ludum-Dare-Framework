@@ -167,8 +167,14 @@ please see licence.txt
 /* TODO: fix this one */
 .form_box_inner {
 	text-align: left;
-	float: left;
 	margin-left: 5px;
+	display: block;
+}
+
+.form_box_inner label {
+	padding: 2px;
+	padding-left: 5px;
+	padding-right: 5px;
 }
 
 
