@@ -98,7 +98,15 @@ function TileBrowser()
 			var w = inst.tileMap.gfx.tileW;
 			var h = inst.tileMap.gfx.tileH;
 			
-			var pnt = new Point2D( e.offsetX, e.offsetY );
+			var x = e.offsetX;
+			var y = e.offsetY;
+			if( x == undefined )
+			{
+				x = e.layerX;
+				y = e.layerY;
+			}
+			
+			var pnt = new Point2D( x, y );
 			pnt.toTile( w, h );
 			
 			var idx = pnt.asIdx( inst.tileMap.width, inst.tileMap.height );
@@ -429,7 +437,14 @@ function Mapper()
 			var w = inst.tileMap.gfx.tileW;
 			var h = inst.tileMap.gfx.tileH;
 			
-			var pnt = new Point2D( e.offsetX, e.offsetY );
+			var x = e.offsetX;
+			var y = e.offsetY;
+			if( x == undefined )
+			{
+				x = e.layerX;
+				y = e.layerY;
+			}
+			var pnt = new Point2D( x, y );
 			pnt.toTile( w, h );
 			
 			var idx = pnt.asIdx( inst.tileMap.width, inst.tileMap.height );

@@ -45,7 +45,7 @@ please see licence.txt
 		color-stop(0.83, rgb(255,186,60))
 	);
 	
-	-moz-border-radius-toprigth: 10px;
+	-moz-border-radius-topright: 10px;
 	border-top-right-radius: 10px;
 	
 	-moz-border-radius-topleft: 10px;
@@ -89,7 +89,7 @@ please see licence.txt
 		color-stop(0.86, rgb(247,132,0))
 	);
 		
-	-moz-border-radius-toprigth: 10px;
+	-moz-border-radius-topright: 10px;
 	border-top-right-radius: 10px;
 	
 	-moz-border-radius-topleft: 10px;
@@ -121,7 +121,7 @@ please see licence.txt
 	-webkit-box-shadow: 0px 5px 5px #222;
 	box-shadow: 0px 5px 5px #222;
 	
-	-moz-border-radius-toprigth: 10px;
+	-moz-border-radius-topright: 10px;
 	border-top-right-radius: 10px;
 	
 	-moz-border-radius-topleft: 10px;
@@ -146,13 +146,13 @@ please see licence.txt
 	
 	background-color: #EEEEEE;
 	
-	-moz-border-radius-toprigth: 5px;
+	-moz-border-radius-topright: 5px;
 	border-top-right-radius: 5px;
 	
 	-moz-border-radius-topleft: 5px;
 	border-top-left-radius: 5px;
 	
-	-moz-border-radius-bottomrigth: 5px;
+	-moz-border-radius-bottomright: 5px;
 	border-bottom-right-radius: 5px;
 	
 	-moz-border-radius-bottomleft: 5px;
@@ -194,13 +194,13 @@ please see licence.txt
 	cursor:normal;
 	border: 1px solid #F2F2F2; 
 	
-	-moz-border-radius-toprigth: 5px;
+	-moz-border-radius-topright: 5px;
 	border-top-right-radius: 5px;
 	
 	-moz-border-radius-topleft: 5px;
 	border-top-left-radius: 5px;
 	
-	-moz-border-radius-bottomrigth: 5px;
+	-moz-border-radius-bottomright: 5px;
 	border-bottom-right-radius: 5px;
 	
 	-moz-border-radius-bottomleft: 5px;
@@ -242,13 +242,13 @@ please see licence.txt
 	
 	border: 1px solid rgb( 255, 184, 60 ); 
 	
-	-moz-border-radius-toprigth: 5px;
+	-moz-border-radius-topright: 5px;
 	border-top-right-radius: 5px;
 	
 	-moz-border-radius-topleft: 5px;
 	border-top-left-radius: 5px;
 	
-	-moz-border-radius-bottomrigth: 5px;
+	-moz-border-radius-bottomright: 5px;
 	border-bottom-right-radius: 5px;
 	
 	-moz-border-radius-bottomleft: 5px;
@@ -311,7 +311,7 @@ please see licence.txt
 	
 	vertical-align: middle;
 	
-	/*-moz-border-radius-bottomrigth: 10px;
+	/*-moz-border-radius-bottomright: 10px;
 	border-bottom-right-radius: 10px;
 	
 	-moz-border-radius-bottomleft: 10px;
@@ -355,13 +355,13 @@ please see licence.txt
 	-webkit-box-shadow: 0px 0px 5px #222;
 	box-shadow: 0px 0px 5px #222;
 	
-	-moz-border-radius-toprigth: 10px;
+	-moz-border-radius-topright: 10px;
 	border-top-right-radius: 10px;
 	
 	-moz-border-radius-topleft: 10px;
 	border-top-left-radius: 10px;
 	
-	-moz-border-radius-bottomrigth: 10px;
+	-moz-border-radius-bottomright: 10px;
 	border-bottom-right-radius: 10px;
 	
 	-moz-border-radius-bottomleft: 10px;
@@ -392,7 +392,7 @@ please see licence.txt
 		color-stop(0.86, rgb(247,132,0))
 	);
 		
-	-moz-border-radius-toprigth: 10px;
+	-moz-border-radius-topright: 10px;
 	border-top-right-radius: 10px;
 	
 	-moz-border-radius-topleft: 10px;
@@ -404,13 +404,13 @@ please see licence.txt
 	border: 1px solid #BBBBBB;
 	background-color: #EEEEEE;
 	
-	-moz-border-radius-toprigth: 5px;
+	-moz-border-radius-topright: 5px;
 	border-top-right-radius: 5px;
 	
 	-moz-border-radius-topleft: 5px;
 	border-top-left-radius: 5px;
 	
-	-moz-border-radius-bottomrigth: 5px;
+	-moz-border-radius-bottomright: 5px;
 	border-bottom-right-radius: 5px;
 	
 	-moz-border-radius-bottomleft: 5px;
@@ -426,7 +426,7 @@ please see licence.txt
 	height: 15px;
 	width: 100%;
 
-	-moz-border-radius-bottomrigth: 10px;
+	-moz-border-radius-bottomright: 10px;
 	border-bottom-right-radius: 10px;
 	
 	-moz-border-radius-bottomleft: 10px;
