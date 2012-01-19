@@ -14,6 +14,9 @@ function showIntro()
 This software is beta and still in active development.\
 It is (c) Tim Kelsey 2012 and released under the MIT License\n\
 ----------------------------\n\
+v0.4 Second Public Release.\n\
+- Fixes for Firefox\n\
+- Layers suport added\n\n\
 v0.3 Second Public Release.\n\
 - Fixed several UI bugs\n\
 - Added unit selector for tile size\n\

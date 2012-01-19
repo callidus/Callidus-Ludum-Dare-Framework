@@ -764,30 +764,105 @@ function loadMap( menu, form )
 	};
 	
 	// load map
+	var addLayers = false;
+	var layerNames  = false;
+	var prefixSize  = false;
+	
+	var width  = formRoot.elements["width"];
+	var height = formRoot.elements["height"];
+	var addLayersBtn  = formRoot.elements["add_layers"];
+	var layerNamesBtn = formRoot.elements["layer_names"];
+	var prefixSizeBtn = formRoot.elements["prefix_size"];
+	
+	prefixSize = prefixSizeBtn.checked;
+	width.disabled = prefixSize;
+	height.disabled = prefixSize;
+	prefixSizeBtn.onclick = function( e )
+	{
+		prefixSize = prefixSizeBtn.checked;
+		width.disabled = prefixSize;
+		height.disabled = prefixSize;
+	}
+	
+	addLayers = addLayersBtn.checked;
+	addLayersBtn.onclick = function( e )
+	{
+		addLayers = addLayersBtn.checked;
+	}
+	
+	layerNames = layerNamesBtn.checked;
+	layerNamesBtn.onclick = function( e )
+	{
+		layerNames = layerNamesBtn.checked;
+	}
+	
 	formRoot.elements['load'].onclick = function( e ) 
 	{	
-		var w = parseInt( formRoot.elements["width"].value );
-		var h = parseInt( formRoot.elements["height"].value );
+		var w = parseInt( width.value );
+		var h = parseInt( height.value );
 		var file = formRoot.elements["path"].files[0];
+		
 		//var fileType = /text.*/;  
 		//if( file.type.match( fileType ) ) 
-		
-		if( !isNaN( w ) && !isNaN( h ) )
+		if( ( !isNaN( w ) && !isNaN( h ) ) || prefixSize )
 		{  
 			var reader = new FileReader();  
 			reader.onloadend = function( e )
 			{
+				var start = 0;
+				var arr = e.target.result.split(',');
+				if( prefixSize )
+				{
+					w = parseInt( arr[0] );
+					h = parseInt( arr[1] );
+					start = 2;
+				}
+				
 				if( !gMapper )
 				{
 					gMapper = new Mapper();
 					gMapper.setup( w, h );
 				}
 				
-				var arr = e.target.result.split(',');
-				var cnt = Math.min( w * h, arr.length );
-				for( var i=0; i<cnt; ++i )
+				var fst = 0;
+				var cnt = w * h;
+				var num = Math.floor( ( arr.length - start ) / cnt );
+				
+				if( addLayers )
 				{
-					gMapper.mapData[gMapper.activeLayer][i] = parseInt( arr[i], 10 );
+					fst = gMapper.layerNames.length;
+					for( var i=0; i<num; ++i )
+					{
+						gMapper.mapData[i + fst] = new Array(); 
+					}
+				}
+				
+				for( var j=fst; j<num; ++j )
+				{
+					// add layer name
+					if( layerNames )
+					{
+						gMapper.layerNames[j] = arr[start];
+						start += 1;
+					}
+					
+					// fill it all with 0 first
+					for( var i=0; i<( gMapper.w * gMapper.h ); ++i )
+					{
+						gMapper.mapData[j][i] = 0;
+					}
+					
+					// read in as much data as we have
+					var idx = 0;
+					for( var y=0; y<h; ++y )
+					{
+						for( var x=0; x<w; ++x )
+						{
+							idx = x + y * w;
+							gMapper.mapData[j][idx] = parseInt( arr[start + idx], 10 );
+						}
+					}
+					start += cnt;
 				}
 				gMapper.tileMap.setData( gMapper.mapData );
 				gMapper.draw();
