@@ -831,41 +831,48 @@ function loadMap( menu, form )
 				if( addLayers )
 				{
 					fst = gMapper.layerNames.length;
-					for( var i=0; i<num; ++i )
-					{
-						gMapper.mapData[i + fst] = new Array(); 
-					}
 				}
-				
-				for( var j=fst; j<num; ++j )
+
+				var sel = document.getElementById( "layers" );
+				for( var j=fst; j<fst+num; ++j )
 				{
 					// add layer name
 					if( layerNames )
 					{
+						sel.options[j] = new Option( arr[start] + " (" + j + ")" )
 						gMapper.layerNames[j] = arr[start];
 						start += 1;
 					}
+					else
+					{
+						var name = "Layer (" + j + ")";
+						sel.options[j] = new Option( name );
+						gMapper.layerNames[j] = name;
+					}
 					
 					// fill it all with 0 first
+					gMapper.mapData[j] = new Array();
 					for( var i=0; i<( gMapper.w * gMapper.h ); ++i )
 					{
 						gMapper.mapData[j][i] = 0;
 					}
 					
 					// read in as much data as we have
-					var idx = 0;
+					var idx1 = 0;
+					var idx2 = 0;
 					for( var y=0; y<h; ++y )
 					{
 						for( var x=0; x<w; ++x )
 						{
-							idx = x + y * w;
-							gMapper.mapData[j][idx] = parseInt( arr[start + idx], 10 );
+							idx1 = x + y * gMapper.w;
+							idx2 = x + y * w;
+							gMapper.mapData[j][idx1] = parseInt( arr[start + idx2], 10 );
 						}
 					}
 					start += cnt;
 				}
 				gMapper.tileMap.setData( gMapper.mapData );
-				gMapper.draw();
+				gMapper.setActiveLayer( 0 );
 			}
 			reader.readAsText( file );
 			menuRoot.style.visibility = 'hidden';
