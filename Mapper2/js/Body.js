@@ -223,41 +223,15 @@ function loadTileSheet( menu, form )
 				menuRoot.style.visibility = 'visible';
 				menuRoot.style.display = 'block';
 				
-				// cancel - do nothing 
-				formRoot.elements['cancel'].onclick = function( e ) 
+				var close = function( e )
 				{
-					menuRoot.style.visibility = 'hidden';
-					menuRoot.style.display = 'none';
-					gMenuOpen = false;
-				};
-				
-				close = function( w, h, pix, url )
-				{
-					gTileBrowser = new TileBrowser();
-					if( url )
-					{
-						var img = new Image();
-						img.onload = function()
-						{
-							if( pix ) // size given in pix per tile, convert
-							{
-								gTileBrowser.w = this.width / w;
-								gTileBrowser.h = this.height / h;
-							}
-							else
-							{
-								gTileBrowser.w = w;
-								gTileBrowser.h = h;
-							}
-							var gfx = new TileGraphic( this, gTileBrowser.h, gTileBrowser.w  );
-							gTileBrowser.finaliseLoad( gfx );
-						}
-						img.src = url;
-					}
 					menuRoot.style.visibility = 'hidden';
 					menuRoot.style.display = 'none';
 					gMenuOpen = false;
 				}
+				
+				// cancel - do nothing 
+				formRoot.elements['cancel'].onclick = close
 				
 				// load file sheet
 				formRoot.elements['load'].onclick = function( e ) 
@@ -276,7 +250,8 @@ function loadTileSheet( menu, form )
 							var reader = new FileReader();  
 							reader.onloadend = function( e )
 							{
-								close( w, h, pix, e.target.result );
+								close();
+								doLoadTileSheet( w, h, pix, e.target.result );
 							}
 							reader.readAsDataURL( file ); 
 						}
@@ -287,11 +262,13 @@ function loadTileSheet( menu, form )
 						switch( select.options[select.selectedIndex].value )
 						{
 							case "default_tiles_1":
-								close( 39, 1, false, "img/default_tiles_1.png" );
+								close();
+								doLoadTileSheet( 39, 1, false, "img/default_tiles_1.png" ); 
 								break;
 								
 							case "default_tiles_2":
-								close( 6, 6, false, "img/default_tiles_2.png" );
+								close();
+								doLoadTileSheet( 6, 6, false, "img/default_tiles_2.png" );
 								break;
 								
 							default:
@@ -308,6 +285,36 @@ function loadTileSheet( menu, form )
 		{
 			gMenuOpen = false;
 		}
+	}
+}
+
+function doLoadTileSheet( w, h, pix, url, cb )
+{
+	gTileBrowser = new TileBrowser();
+	if( url )
+	{
+		var img = new Image();
+		img.onload = function()
+		{
+			if( pix ) // size given in pix per tile, convert
+			{
+				gTileBrowser.w = this.width / w;
+				gTileBrowser.h = this.height / h;
+			}
+			else
+			{
+				gTileBrowser.w = w;
+				gTileBrowser.h = h;
+			}
+			var gfx = new TileGraphic( this, gTileBrowser.h, gTileBrowser.w  );
+			gTileBrowser.finaliseLoad( gfx );
+			
+			if( cb )
+			{
+				cb();
+			}
+		}
+		img.src = url;
 	}
 }
 
@@ -430,6 +437,14 @@ function Mapper()
 		this.viewPort.renderMap( this.tileMap, this.activeLayer );
 	}
 	
+	this.drawSelectRect = function( x, y, w, h )
+	{
+		// stroke rect draws outside of the bounds, 
+		// so pull it back in a few px to fit
+		this.context.strokeStyle = "rgba(255,186,60,0.8)";
+		this.context.strokeRect( x*w+1, y*h+1, w-2, h-2 );
+	}
+	
 	this.onMouseMove = function( inst )
 	{
 		return function( e )
@@ -464,10 +479,7 @@ function Mapper()
 				inst.tileMap.setDirtyIdx( inst.pickIdx );
 				inst.draw();
 				
-				// stroke rect draws outside of the bounds, 
-				// so pull it back in a fe px to fit				
-				inst.context.strokeStyle = "rgba(255,186,60,0.8)";
-				inst.context.strokeRect(rct.getX() * w +1, rct.getY() * h +1, rct.w -2, rct.h -2);
+				inst.drawSelectRect( rct.getX(), rct.getY(), rct.w, rct.h );
 				
 				inst.pickIdx = idx;
 				inst.refresh = false;
@@ -482,10 +494,37 @@ function Mapper()
 	{
 		return function( e )
 		{
+			// - try and stop right btn context menu --
 			inst.doPaint = true;
-			inst.mapData[inst.activeLayer][inst.pickIdx] = gTileBrowser.tileValue;
 			inst.tileMap.setDirtyIdx( inst.pickIdx );
+			
+			if( e.stopPropagation )
+			{
+				e.stopPropagation();
+			}
+			if( e.preventDefault )
+			{
+				e.preventDefault();
+			}
+			e.cancelBubble = true;
+			// --------------------------------------
+			
+			if( e.button == 0 ) // left click
+			{
+				inst.mapData[inst.activeLayer][inst.pickIdx] = gTileBrowser.tileValue;
+			}
+			else if( e.button == 2 ) // right click
+			{
+				inst.mapData[inst.activeLayer][inst.pickIdx] = 0;
+			}
+			
 			inst.draw();
+			var pnt = new Point2D();
+			
+			pnt.fromIdx( inst.pickIdx, inst.tileMap.width, inst.height );
+			inst.drawSelectRect( pnt.x, pnt.y, inst.tileMap.gfx.tileW, inst.tileMap.gfx.tileH );
+			
+			return false;
 		}
 	}
 	
@@ -551,9 +590,7 @@ function newMap( menu, form )
 						menuRoot.style.display = 'none';
 						gMenuOpen = false;
 						
-						// load stuff
-						gMapper = new Mapper();
-						gMapper.setup(	w, h );
+						doNewMap( w, h );
 					}
 					else
 					{
@@ -570,6 +607,12 @@ function newMap( menu, form )
 			gMenuOpen = false;
 		}
 	}
+}
+
+function doNewMap( w, h )
+{
+	gMapper = new Mapper();
+	gMapper.setup(	w, h );
 }
 
 // save map

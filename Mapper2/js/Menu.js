@@ -7,6 +7,14 @@ please see licence.txt
  */
 
 
+window.oncontextmenu = function( e )
+{
+	e = ( e || window.event );
+	e.preventDefault();
+    e.stopPropagation();
+    return false;
+}
+
 function toggleObjVisible(obj)
 {
 	obj.style.visibility = ( obj.style.visibility == 'visible' ) ? 'hidden' : 'visible';

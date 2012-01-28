@@ -18,6 +18,7 @@ please see licence.txt
 		<script type="text/javascript" language="javascript" src="js/Menu.js"></script>
 		<script type="text/javascript" language="javascript" src="js/Body.js"></script>
 		<script type="text/javascript" language="javascript" src="js/Intro.js"></script>
+		<script type="text/javascript" language="javascript" src="js/UrlApi.js"></script>
 		<!--script type="text/javascript" language="javascript" src="js/Value.js"></script-->
 		
 		<script type="text/javascript"> 
@@ -26,14 +27,17 @@ please see licence.txt
 			{
 				initMenu( 'map_menu', 'map_btn' );
 				resize();
-				showIntro();
+				if( !parseUrl() )
+				{
+					showIntro();
+				}
 			} 
 		</script> 
 		
 		<title>Mapper</title>
 	</head>
 	
-	<body onResize="resize()" ><!--onload="init()"-->
+	<body onResize="resize()" onload="init()">
 		<div id="container">
 			<div id="menu_area">
 				<!-- this image is needed because google adds stop my body.onLoad stuff -->
@@ -320,6 +324,6 @@ please see licence.txt
 			</div>
 			
 		</div>
-		<img src="img/blank.png" onLoad="init()"/>
+		<!-- img src="img/blank.png" onLoad="init()"/ -->
 	</body>
 </html>

@@ -40,7 +40,7 @@ function ViewPort( x, y, w, h, ctx )
 			for( i=x; i<tW; ++i )
 			{
 				var idx = j * map.width + i;
-				if( map.dirtyFlags[idx] || this.margin )
+				if( map.dirtyFlags[idx] )
 				{
 					map.dirtyFlags[idx] = 0;
 					if( layer != 0 && map.tileData[layer][idx] != 0 )
@@ -58,32 +58,6 @@ function ViewPort( x, y, w, h, ctx )
 							map.tileData[0][idx] );
 					}
 				}
-			}
-		}
-	
-		// TODO: see if there is a better way of doing this.
-		if( this.marginX )
-		{
-			for( j=y; j<tH; ++j )
-			{
-				var idx = j * map.width + x - 1;
-				map.gfx.draw( this.context, 
-						-map.gfx.tileW - this.pxOffset.x,
-						( j - y ) * map.gfx.tileH - this.pxOffset.y,
-						map.tileData[0][idx] );
-			}
-		}
-		
-		// TODO: see if there is a better way of doing this.
-		if( this.marginY )
-		{
-			for( j=x; j<tW; ++j )
-			{
-				var idx = ( y - 1 ) * map.width + j;
-				map.gfx.draw( this.context, 
-						( j - x ) * map.gfx.tileW - this.pxOffset.x,
-						-map.gfx.tileH - this.pxOffset.y,
-						map.tileData[0][idx] );
 			}
 		}
 	}
