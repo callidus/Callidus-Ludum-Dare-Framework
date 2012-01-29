@@ -507,11 +507,27 @@ please see licence.txt
 }
 
 .styled-select select {
+	-webkit-appearance: none;
+	-moz-appearance: button;
+	appearance: none;
+	
 	cursor: pointer;
 	background: transparent;
-	padding: 2px;
 	font-size: 10px;
-	border: 1px solid #DDDDDD;
+	border: none;
+	padding-bottom: 5px;
 	padding-right: 20px;
-	-webkit-appearance: none
 }
+
+
+/* HACK override the styled select icon with a mix in class*/
+.button.enabled .zoom-select {
+	background: url(../img/system-search.png) no-repeat right #DDDDDD !important;
+}
+
+.button .zoom-select {
+	background: url(../img/system-search-dis.png) no-repeat right #DDDDDD !important;
+}
+
+
+

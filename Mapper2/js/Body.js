@@ -56,7 +56,7 @@ function TileBrowser()
 		this.canvas.width = 3 * this.tileGraphic.tileRealW 
 		this.canvas.height = j * this.tileGraphic.tileRealH 
 		
-		this.viewPort = new ViewPort( 0, 0, 3, j, this.context );
+		this.viewPort = new ViewPort( 0, 0, 3, j, this.canvas );
 		this.tileMap.refresh();
 		this.show();
 		this.draw();
@@ -142,8 +142,8 @@ function TileBrowser()
 	{
 		return function( e )
 		{
-			var w = inst.tileMap.gfx.tileW;
-			var h = inst.tileMap.gfx.tileH;
+			var w = inst.tileMap.gfx.tileW * inst.viewPort.scale;
+			var h = inst.tileMap.gfx.tileH * inst.viewPort.scale;
 			
 			var old = new Point2D();
 			old.fromIdx( inst.pickIdx, inst.tileMap.width, inst.tileMap.height );
@@ -166,8 +166,8 @@ function TileBrowser()
 	{
 		return function( e )
 		{
-			var w = inst.tileMap.gfx.tileW;
-			var h = inst.tileMap.gfx.tileH;
+			var w = inst.tileMap.gfx.tileW * inst.viewPort.scale;
+			var h = inst.tileMap.gfx.tileH * inst.viewPort.scale;
 			
 			var old = new Point2D();
 			old.fromIdx( inst.selectIdx, inst.tileMap.width, inst.tileMap.height );
@@ -189,8 +189,8 @@ function TileBrowser()
 	
 	this.drawSelection = function()
 	{
-		var w = this.tileMap.gfx.tileW;
-		var h = this.tileMap.gfx.tileH;
+		var w = this.tileMap.gfx.tileW * this.viewPort.scale;
+		var h = this.tileMap.gfx.tileH * this.viewPort.scale;
 		var pnt = new Point2D();
 		
 		this.context.strokeStyle = "rgb(247,132,0)";
@@ -335,6 +335,16 @@ function Mapper()
 	this.doPaint = false;
 	this.activeLayer = 0;
 	this.statusBar = null;
+	
+	this.setZoom = function( zoom )
+	{
+		this.canvas.width  = this.w * this.tileGraphic.tileRealW * zoom;
+		this.canvas.height = this.h * this.tileGraphic.tileRealH * zoom;
+		this.viewPort.scale = zoom;
+		this.tileMap.refresh();
+		this.viewPort.clear();
+		this.draw();
+	}
 
 	this.addLayer = function( name )
 	{
@@ -365,7 +375,6 @@ function Mapper()
 	{
 		this.activeLayer = layer;
 		this.tileMap.refresh();
-		this.viewPort.refresh( gMapper.tileMap );
 		this.draw();
 	}
 	
@@ -374,27 +383,37 @@ function Mapper()
 		this.statusBar = document.getElementById( "status_bar" );
 		this.canvas = document.getElementById( "map_canvas" );
 		this.context  = this.canvas.getContext( '2d' );
+		this.viewPort = new ViewPort( 0, 0, w, h, this.canvas );
 		this.w = w;
 		this.h = h;
 		
 		if( old )
 		{
+			this.viewPort.scale = old.viewPort.scale;
+			
 			var tH = Math.min( old.h, h );
 			var tW = Math.min( old.w, w );
 			var tZ = old.mapData.length;
 			for( var z=0; z<tZ; ++z )
 			{
+				this.layerNames[z] = old.layerNames[z];
 				this.mapData[z] = new Array();
 			}
 			
 			for( var z=0; z<tZ; ++z )
 			{
-				for( var y=0; y<tH; ++y )
+				for( var y=0; y<h; ++y )
 				{
-					for( var x=0; x<tW; ++x )
+					for( var x=0; x<w; ++x )
 					{
-						this.mapData[z][x + y * w] = old.mapData[z][x + y * old.w];
-						this.layerNames[z] = old.layerNames[z];
+						if( y >= tH || x >= tW )
+						{
+							this.mapData[z][x + y * w] = 0;
+						}
+						else
+						{
+							this.mapData[z][x + y * w] = old.mapData[z][x + y * old.w];
+						}
 					}
 				}
 			}
@@ -414,21 +433,20 @@ function Mapper()
 		this.tileMap = new TileMap( this.tileGraphic, w, h );
 		this.tileMap.setData( this.mapData );
 		
-		this.canvas.width  = w * this.tileGraphic.tileRealW 
-		this.canvas.height = h * this.tileGraphic.tileRealH 
+		this.canvas.width		= w * this.tileGraphic.tileRealW * this.viewPort.scale;
+		this.canvas.height		= h * this.tileGraphic.tileRealH * this.viewPort.scale;
+		this.canvas.onmouseout	= this.onMouseOut( this );
+		this.canvas.onmousemove	= this.onMouseMove( this );
+		this.canvas.onmousedown	= this.onMouseDown( this );
+		this.canvas.onmouseup	= this.onMouseUp( this );
 		
-		this.viewPort = new ViewPort( 0, 0, w, h, this.context );
 		this.tileMap.refresh();
 		this.draw();
-		
-		this.canvas.onmouseout		= this.onMouseOut( this );
-		this.canvas.onmousemove		= this.onMouseMove( this );
-		this.canvas.onmousedown		= this.onMouseDown( this );
-		this.canvas.onmouseup		= this.onMouseUp( this );
 		
 		gMenuTab["resize_map"].enable( "resizeMap('resize_map_menu','resize_map_form')" );
 		gMenuTab["save_map"].enable( "showMapData('map_data_menu','map_data_form')" );
 		gMenuTab["new_layer"].enable( "makeNewLayer('new_layer_menu','new_layer_form')" );
+		gMenuTab["zoom"].enable( null );
 		gMenuTab["layer_select"].enable( null );
 	}
 	
@@ -449,8 +467,8 @@ function Mapper()
 	{
 		return function( e )
 		{
-			var w = inst.tileMap.gfx.tileW;
-			var h = inst.tileMap.gfx.tileH;
+			var w = inst.tileMap.gfx.tileW * inst.viewPort.scale;
+			var h = inst.tileMap.gfx.tileH * inst.viewPort.scale;
 			
 			var x = e.offsetX;
 			var y = e.offsetY;
@@ -520,9 +538,11 @@ function Mapper()
 			
 			inst.draw();
 			var pnt = new Point2D();
+			var w = inst.tileMap.gfx.tileW * inst.viewPort.scale;
+			var h = inst.tileMap.gfx.tileH * inst.viewPort.scale;
 			
 			pnt.fromIdx( inst.pickIdx, inst.tileMap.width, inst.height );
-			inst.drawSelectRect( pnt.x, pnt.y, inst.tileMap.gfx.tileW, inst.tileMap.gfx.tileH );
+			inst.drawSelectRect( pnt.x, pnt.y, w, h );
 			
 			return false;
 		}
@@ -540,8 +560,8 @@ function Mapper()
 	{
 		return function( e )
 		{
-			var w = inst.tileMap.gfx.tileW;
-			var h = inst.tileMap.gfx.tileH;
+			var w = inst.tileMap.gfx.tileW * inst.viewPort.scale;
+			var h = inst.tileMap.gfx.tileH * inst.viewPort.scale;
 			
 			var old = new Point2D();
 			old.fromIdx( inst.pickIdx, inst.tileMap.width, inst.tileMap.height );
@@ -1014,5 +1034,14 @@ function deleteLayer()
 	for( var i=0; i<gMapper.layerNames.length; ++i )
 	{
 		layerSelect.options[ layerSelect.options.length ] = new Option( gMapper.layerNames[i] + " (" + i + ")" );
+	}
+}
+
+var zooms = new Array( 1.0, 0.5, 0.25 );
+function setZoom( idx )
+{
+	if( gMapper )
+	{
+		gMapper.setZoom( zooms[idx] );
 	}
 }

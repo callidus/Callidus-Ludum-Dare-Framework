@@ -33,7 +33,7 @@ function TileGraphic( img, rows, cols )
 	}
 	
 	// we need to draw stuff
-	this.draw = function( ctx, dX, dY, idx )
+	this.draw = function( ctx, dX, dY, idx, scale )
 	{
 		var sX = this.tileRealW * Math.floor( idx % this.cols );
 		var sY = this.tileRealH * Math.floor( idx / this.cols );
@@ -41,7 +41,8 @@ function TileGraphic( img, rows, cols )
 		ctx.drawImage(	this.img,
 						sX + this.offset, sY + this.offset, 
 						this.tileW, this.tileH,
-						dX, dY, this.tileW, this.tileH );
+						dX, dY, 
+						this.tileW * scale, this.tileH * scale );
 	}
 }
 

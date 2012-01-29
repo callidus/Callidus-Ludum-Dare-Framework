@@ -55,6 +55,12 @@ var gMenuTab = null;
 function nullFunc(){}
 function initMenu( id, btn )
 {
+	// HACK reset any state stuff that may persist ---------
+	var elem = document.getElementById("map-zoom");
+	elem.selectedIndex = 0;
+	// -----------------------------------------------------
+	
+	
 	lastBtn = document.getElementById( btn );
 	lastBtn.setAttribute( "class", "menu_item selected" );
 	
@@ -72,7 +78,7 @@ function initMenu( id, btn )
 		'save_map_as' : document.getElementById('save_map_as'),
 		'new_layer' : document.getElementById('new_layer'),
 		'layer_select' : document.getElementById('layer_select'),
-		'show_hide' : document.getElementById('show_hide'),
+		'zoom' : document.getElementById('zoom'),
 		'save_layer_as' : document.getElementById('save_layer_as'),
 		'delete_layer' : document.getElementById('delete_layer'),
 		'fill' : document.getElementById('fill'),
@@ -103,6 +109,10 @@ function initMenu( id, btn )
 				else
 				{
 					this.setAttribute( "class", "button enabled" );
+					if( this.style.background )
+					{
+						alert( this.style.background );
+					}
 				}
 				
 				if( func )

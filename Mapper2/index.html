@@ -95,6 +95,24 @@ please see licence.txt
 								<img id="detail_fill_img" src="img/image-missing.png"/>
 							</div>
 						</div>
+						<div class="form_box">
+							<!--div id="zoom" title="Zoom" class="button disabled">
+								<img id="zoom_img" src="img/system-search.png"/>
+							</div-->
+							<form>
+								<div class="form_field">
+									<div class="button disabled" id="zoom">
+										<div class="styled-select zoom-select">
+											<select id="map-zoom" title="Map Zoom" onChange="setZoom(this.selectedIndex)">
+												<option>100%</option>
+												<option>50%</option>
+												<option>25%</option>
+											</select>
+										</div>
+									</div>
+								</div>
+							</form>
+						</div>	
 					</div>
 
 					<!-- LAYERS MENU -->
@@ -122,11 +140,6 @@ please see licence.txt
 									</div>
 								</div>
 							</form>
-						</div>
-						<div class="form_box">
-							<div id="show_hide" title="Show/Hide" class="button disabled" onClick="showHide(this.form)">
-								<img id="show_hide_img" src="img/system-search.png"/>
-							</div>
 						</div>
 					</div>
 				</div>
