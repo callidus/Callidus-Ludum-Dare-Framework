@@ -9,11 +9,15 @@ please see licence.txt
 function showIntro()
 {
 	showInfo("info_menu", "info_form", 
-"Welcome to Mapper v0.4 BETA\n\
+"Welcome to Mapper v0.5 BETA\n\
 ---------------------------\n\
 This software is beta and still in active development.\
 It is (c) Tim Kelsey 2012 and released under the MIT License\n\
 ----------------------------\n\
+v0.5:\n\
+- Added a URL api \n\
+- Added map zoom \n\
+- Added right click erase \n\
 v0.4:\n\
 - Fixes for Firefox\n\
 - Layers suport added\n\
