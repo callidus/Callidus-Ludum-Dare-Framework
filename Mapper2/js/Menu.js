@@ -57,7 +57,7 @@ function initMenu( id, btn )
 {
 	// HACK reset any state stuff that may persist ---------
 	var elem = document.getElementById("map-zoom");
-	elem.selectedIndex = 0;
+	elem.selectedIndex = 2;
 	// -----------------------------------------------------
 	
 	

@@ -1037,7 +1037,7 @@ function deleteLayer()
 	}
 }
 
-var zooms = new Array( 1.0, 0.5, 0.25 );
+var zooms = new Array( 4.0, 2.0, 1.0, 0.5, 0.25 );
 function setZoom( idx )
 {
 	if( gMapper )
