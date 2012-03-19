@@ -1,6 +1,9 @@
 
 function parseUrl()
 {
+	// TODO: change this to stor all options in an object 
+	// so we dont have to do lots of passes
+	//
 	// parse url options
 	function getQueryVariable( variable ) 
 	{ 
@@ -29,6 +32,7 @@ function parseUrl()
 	}
 	
 	var haveMap      = false;
+	var haveMapData  = false;
 	var urlMapWidth  = parseInt( getQueryVariable( "mw" ) );
 	var urlMapHeight = parseInt( getQueryVariable( "mh" ) );
 	if( !isNaN( urlMapWidth ) &&
@@ -44,6 +48,12 @@ function parseUrl()
 		haveBanner = true;
 	}
 	
+	var urlMapData = getQueryVariable( "mapdata" )
+	if( urlMapData != undefined )
+	{
+		haveMapData = true;
+	}
+	
 	if( haveTiles )
 	{
 		doLoadTileSheet( urlTileWidth, urlTileHeight, true, urlTileSheet,
@@ -55,6 +65,12 @@ function parseUrl()
 					if( haveBanner )
 					{
 						showInfo( "info_menu", "info_form", urlBanner );
+					}
+					
+					if( haveMapData )
+					{
+						var arr = urlMapData.split(',');
+						doLoadMapData( arr, false, false, true )
 					}
 				}
 			}

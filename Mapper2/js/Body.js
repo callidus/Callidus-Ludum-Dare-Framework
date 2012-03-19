@@ -39,6 +39,7 @@ function TileBrowser()
 		this.tileMenu = document.getElementById( "tile_menu" );
 		this.canvas = document.getElementById( "tile_canvas" );
 		this.context  = this.canvas.getContext( '2d' );
+		this.context.mozImageSmoothingEnabled = false; // fix image smoothing on ff
 		
 		var j = ( this.h * this.w );
 		this.mapData[0] = new Array();
@@ -382,7 +383,10 @@ function Mapper()
 	{
 		this.statusBar = document.getElementById( "status_bar" );
 		this.canvas = document.getElementById( "map_canvas" );
+		
 		this.context  = this.canvas.getContext( '2d' );
+		this.context.mozImageSmoothingEnabled = false; // fix image smoothing on ff
+		
 		this.viewPort = new ViewPort( 0, 0, w, h, this.canvas );
 		this.w = w;
 		this.h = h;
@@ -632,7 +636,7 @@ function newMap( menu, form )
 function doNewMap( w, h )
 {
 	gMapper = new Mapper();
-	gMapper.setup(	w, h );
+	gMapper.setup( w, h );
 }
 
 // save map
@@ -874,68 +878,7 @@ function loadMap( menu, form )
 			{
 				var start = 0;
 				var arr = e.target.result.split(',');
-				if( prefixSize )
-				{
-					w = parseInt( arr[0] );
-					h = parseInt( arr[1] );
-					start = 2;
-				}
-				
-				if( !gMapper )
-				{
-					gMapper = new Mapper();
-					gMapper.setup( w, h );
-				}
-				
-				var fst = 0;
-				var cnt = w * h;
-				var num = Math.floor( ( arr.length - start ) / cnt );
-				
-				if( addLayers )
-				{
-					fst = gMapper.layerNames.length;
-				}
-
-				var sel = document.getElementById( "layers" );
-				for( var j=fst; j<fst+num; ++j )
-				{
-					// add layer name
-					if( layerNames )
-					{
-						sel.options[j] = new Option( arr[start] + " (" + j + ")" )
-						gMapper.layerNames[j] = arr[start];
-						start += 1;
-					}
-					else
-					{
-						var name = "Layer (" + j + ")";
-						sel.options[j] = new Option( name );
-						gMapper.layerNames[j] = name;
-					}
-					
-					// fill it all with 0 first
-					gMapper.mapData[j] = new Array();
-					for( var i=0; i<( gMapper.w * gMapper.h ); ++i )
-					{
-						gMapper.mapData[j][i] = 0;
-					}
-					
-					// read in as much data as we have
-					var idx1 = 0;
-					var idx2 = 0;
-					for( var y=0; y<h; ++y )
-					{
-						for( var x=0; x<w; ++x )
-						{
-							idx1 = x + y * gMapper.w;
-							idx2 = x + y * w;
-							gMapper.mapData[j][idx1] = parseInt( arr[start + idx2], 10 );
-						}
-					}
-					start += cnt;
-				}
-				gMapper.tileMap.setData( gMapper.mapData );
-				gMapper.setActiveLayer( 0 );
+				doLoadMapData( arr, prefixSize, addLayers, layerNames )
 			}
 			reader.readAsText( file );
 			menuRoot.style.visibility = 'hidden';
@@ -950,6 +893,86 @@ function loadMap( menu, form )
 			return;
 		}
 	};
+}
+
+function doLoadMapData( arr, prefixSize, addLayers, layerNames )
+{
+	var w = 0;
+	var h = 0;
+	
+	if( prefixSize )
+	{
+		w = parseInt( arr[0] );
+		h = parseInt( arr[1] );
+		start = 2;
+		
+		if( !gMapper )
+		{
+			gMapper = new Mapper();
+			gMapper.setup( w, h );
+		}
+	}
+	else
+	{
+		w = gMapper.w;
+		h = gMapper.h;
+	}
+
+	var fst = 0;
+	var cnt = w * h;
+	var num = Math.floor( ( arr.length - start ) / cnt );
+
+	if( addLayers )
+	{
+		fst = gMapper.layerNames.length;
+	}
+
+	var sel = document.getElementById( "layers" );
+	for( var j=fst; j<fst+num; ++j )
+	{
+		// add layer name
+		if( layerNames )
+		{
+			sel.options[j] = new Option( arr[start] + " (" + j + ")" )
+			gMapper.layerNames[j] = arr[start];
+			start += 1;
+		}
+		else
+		{
+			var name = "Layer (" + j + ")";
+			sel.options[j] = new Option( name );
+			gMapper.layerNames[j] = name;
+		}
+		
+		// fill it all with 0 first
+		gMapper.mapData[j] = new Array();
+		for( var i=0; i<( gMapper.w * gMapper.h ); ++i )
+		{
+			gMapper.mapData[j][i] = 0;
+		}
+		
+		// read in as much data as we have
+		var idx1 = 0;
+		var idx2 = 0;
+		for( var y=0; y<h; ++y )
+		{
+			for( var x=0; x<w; ++x )
+			{
+				idx1 = x + y * gMapper.w;
+				idx2 = x + y * w;
+				
+				var val = parseInt( arr[start + idx2], 10 );
+				if( isNaN( val ) )
+				{
+					val = 0;
+				}
+				gMapper.mapData[j][idx1] = val;
+			}
+		}
+		start += cnt;
+	}
+	gMapper.tileMap.setData( gMapper.mapData );
+	gMapper.setActiveLayer( 0 );
 }
 
 function showInfo( menu, form, info )
