@@ -1,6 +1,6 @@
 <!--
 (c) 2011 Tim Kelsey
-distributedunder the terms of the MIT licence 
+distributed under the terms of the MIT licence 
 please see licence.txt
 -->
 
@@ -19,6 +19,7 @@ please see licence.txt
 		<script type="text/javascript" language="javascript" src="js/Body.js"></script>
 		<script type="text/javascript" language="javascript" src="js/Intro.js"></script>
 		<script type="text/javascript" language="javascript" src="js/UrlApi.js"></script>
+		<script type="text/javascript" language="javascript" src="js/Input.js"></script>
 		<!--script type="text/javascript" language="javascript" src="js/Value.js"></script-->
 		
 		<script type="text/javascript"> 
@@ -26,6 +27,7 @@ please see licence.txt
 			function init()
 			{
 				initMenu( 'map_menu', 'map_btn' );
+				initInput();
 				resize();
 				if( !parseUrl() )
 				{
@@ -47,7 +49,7 @@ please see licence.txt
 				<div id="layers_btn" class="menu_item" onClick="toggleMenu( 'layers_menu', this )">Layers</div>
 				<!-- div id="tools_btn" class="menu_item" onClick="toggleMenu( 'tools_menu', this )">Tools</div -->
 				
-				<div id="value">
+				<!-- div id="value">
 					<script type="text/javascript">
 						google_ad_client = "ca-pub-1364436723987565";
 						/* mapper */
@@ -58,7 +60,7 @@ please see licence.txt
 					<script type="text/javascript"
 						src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 					</script>
-				</div>
+				</div -->
 				
 				<!-- MAP MENU -->
 				<div id="menu_body">

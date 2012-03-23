@@ -337,6 +337,9 @@ function Mapper()
 	this.activeLayer = 0;
 	this.statusBar = null;
 	
+	this.doMultiSelect = false;
+	this.multiSelectRect = new Rect2D( 0, 0, 0, 0 );
+	
 	this.setZoom = function( zoom )
 	{
 		this.canvas.width  = this.w * this.tileGraphic.tileRealW * zoom;
@@ -467,6 +470,69 @@ function Mapper()
 		this.context.strokeRect( x*w+1, y*h+1, w-2, h-2 );
 	}
 	
+	this.singleSelect = function( x, y, w, h )
+	{
+		var pnt = new Point2D( x, y );
+		pnt.toTile( w, h );
+		
+		var idx = pnt.asIdx( this.tileMap.width, this.tileMap.height );
+		var rct = new Rect2D( pnt.x, pnt.y, w, h );
+		
+		if( idx != this.pickIdx || this.refresh )
+		{	
+			if( this.doPaint )
+			{
+				this.mapData[this.activeLayer][idx] = gTileBrowser.tileValue;
+				this.tileMap.setDirtyIdx( idx );
+			}
+			
+			var old = new Point2D();
+			old.fromIdx( this.pickIdx, this.tileMap.width, this.tileMap.height );
+			this.context.clearRect( old.x * w, old.y * h, rct.w, rct.h );
+			this.tileMap.setDirtyIdx( this.pickIdx );
+			this.draw();
+			
+			this.drawSelectRect( rct.getX(), rct.getY(), rct.w, rct.h );
+			
+			this.pickIdx = idx;
+			this.refresh = false;
+			
+			var val = this.mapData[this.activeLayer][idx];
+			this.statusBar.innerHTML = "<p>Tile Index: " + idx + " Value: " + val + " (Active Layer)</p>";
+		}
+	}
+	
+	this.multiSelect = function( x, y, w, h )
+	{
+		this.draw();
+		var point = new Point2D( x, y );
+		point.toTile( this.tileGraphic.tileW, this.tileGraphic.tileH );
+		point.x++;
+		point.y++;
+		
+		var sIdx = this.multiSelectRect.point.asIdx( this.tileMap.width, this.tileMap.height );
+		var eIdx = point.asIdx( this.tileMap.width, this.tileMap.height );
+		for( var i=sIdx; i<eIdx; ++i )
+		{
+			this.tileMap.setDirtyIdx( i );
+		}
+		
+		var nx = this.multiSelectRect.getX() * this.tileGraphic.tileW;
+		var ny = this.multiSelectRect.getY() * this.tileGraphic.tileH;
+		var nw = Math.max( point.x * this.tileGraphic.tileW - nx, 0 );
+		var nh = Math.max( point.y * this.tileGraphic.tileH - ny, 0 ); 
+		
+		//this.multiSelectRect.w = nw;
+		//this.multiSelectRect.h = nh;
+		this.draw();
+		this.context.strokeStyle = "rgba(255,186,60,0.8)";
+		this.context.fillStyle = "rgba(255,186,60,0.3)";
+		this.context.strokeRect( nx+2, ny+2, nw-3, nh-3 );
+		this.context.fillRect( nx, ny, nw, nh );
+		
+		this.statusBar.innerHTML = "<p>Select: " + sIdx + " to " + eIdx + " (Active Layer)</p>";
+	}
+	
 	this.onMouseMove = function( inst )
 	{
 		return function( e )
@@ -481,33 +547,14 @@ function Mapper()
 				x = e.layerX;
 				y = e.layerY;
 			}
-			var pnt = new Point2D( x, y );
-			pnt.toTile( w, h );
 			
-			var idx = pnt.asIdx( inst.tileMap.width, inst.tileMap.height );
-			var rct = new Rect2D( pnt.x, pnt.y, w, h );
-			
-			if( idx != inst.pickIdx || inst.refresh )
-			{	
-				if( inst.doPaint )
-				{
-					inst.mapData[inst.activeLayer][idx] = gTileBrowser.tileValue;
-					inst.tileMap.setDirtyIdx( idx );
-				}
-				
-				var old = new Point2D();
-				old.fromIdx( inst.pickIdx, inst.tileMap.width, inst.tileMap.height );
-				inst.context.clearRect( old.x * w, old.y * h, rct.w, rct.h );
-				inst.tileMap.setDirtyIdx( inst.pickIdx );
-				inst.draw();
-				
-				inst.drawSelectRect( rct.getX(), rct.getY(), rct.w, rct.h );
-				
-				inst.pickIdx = idx;
-				inst.refresh = false;
-				
-				var val = inst.mapData[inst.activeLayer][idx];
-				inst.statusBar.innerHTML = "<p>Tile Index: " + idx + " Value: " + val + " (Active Layer)</p>";
+			if( inst.doMultiSelect )
+			{
+				inst.multiSelect( x, y, w, h );
+			}
+			else
+			{
+				inst.singleSelect( x, y, w, h );
 			}
 		}
 	}
@@ -517,9 +564,6 @@ function Mapper()
 		return function( e )
 		{
 			// - try and stop right btn context menu --
-			inst.doPaint = true;
-			inst.tileMap.setDirtyIdx( inst.pickIdx );
-			
 			if( e.stopPropagation )
 			{
 				e.stopPropagation();
@@ -531,23 +575,44 @@ function Mapper()
 			e.cancelBubble = true;
 			// --------------------------------------
 			
-			if( e.button == 0 ) // left click
+			// TODO: clean this up a bit ...
+			if( gCtrlDown )
 			{
-				inst.mapData[inst.activeLayer][inst.pickIdx] = gTileBrowser.tileValue;
+				var x = e.offsetX;
+				var y = e.offsetY;
+				if( x == undefined )
+				{
+					x = e.layerX;
+					y = e.layerY;
+				}
+				
+				inst.doMultiSelect = true;
+				inst.multiSelectRect.set( x, y, 0, 0 );
+				inst.multiSelectRect.point.toTile( inst.tileGraphic.tileW, 
+												   inst.tileGraphic.tileH );
 			}
-			else if( e.button == 2 ) // right click
+			else
 			{
-				inst.mapData[inst.activeLayer][inst.pickIdx] = 0;
+				inst.doPaint = true;
+				inst.tileMap.setDirtyIdx( inst.pickIdx );
+			
+				if( e.button == 0 ) // left click
+				{
+					inst.mapData[inst.activeLayer][inst.pickIdx] = gTileBrowser.tileValue;
+				}
+				else if( e.button == 2 ) // right click
+				{
+					inst.mapData[inst.activeLayer][inst.pickIdx] = 0;
+				}
+				
+				inst.draw();
+				var pnt = new Point2D();
+				var w = inst.tileMap.gfx.tileW * inst.viewPort.scale;
+				var h = inst.tileMap.gfx.tileH * inst.viewPort.scale;
+				
+				pnt.fromIdx( inst.pickIdx, inst.tileMap.width, inst.height );
+				inst.drawSelectRect( pnt.x, pnt.y, w, h );
 			}
-			
-			inst.draw();
-			var pnt = new Point2D();
-			var w = inst.tileMap.gfx.tileW * inst.viewPort.scale;
-			var h = inst.tileMap.gfx.tileH * inst.viewPort.scale;
-			
-			pnt.fromIdx( inst.pickIdx, inst.tileMap.width, inst.height );
-			inst.drawSelectRect( pnt.x, pnt.y, w, h );
-			
 			return false;
 		}
 	}
@@ -557,6 +622,7 @@ function Mapper()
 		return function( e )
 		{
 			inst.doPaint = false;
+			inst.doMultiSelect = false;
 		}
 	}
 	
@@ -573,6 +639,7 @@ function Mapper()
 			inst.tileMap.setDirtyIdx( inst.pickIdx );
 			inst.draw();
 			
+			inst.doMultiSelect = false;
 			inst.doPaint = false;
 			inst.refresh = true;
 		}
