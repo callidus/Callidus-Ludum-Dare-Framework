@@ -9,11 +9,16 @@ please see licence.txt
 function showIntro()
 {
 	showInfo("info_menu", "info_form", 
-"Welcome to Mapper v0.5 BETA\n\
+"Welcome to Mapper v0.6 BETA\n\
 ---------------------------\n\
 This software is beta and still in active development.\
 It is (c) Tim Kelsey 2012 and released under the MIT License\n\
 ----------------------------\n\
+v0.6:\n\
+- Added a URL api for map data\n\
+- Added multi-select mode and tools\n\
+- Added new tile sheet from eight 2 empire \n\
+- http://eight2empire.blogspot.co.uk/ \n\
 v0.5:\n\
 - Added a URL api \n\
 - Added map zoom \n\

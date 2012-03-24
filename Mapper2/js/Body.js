@@ -15,197 +15,24 @@ function resize()
 	frame.style.height = windowheight - 132 + "px";
 }
 
-
-// -- tile browser object ----------------------------------------------
-function TileBrowser() 
-{
-	this.viewPort = null;
-	this.tileGraphic = null;
-	this.tileMap = null;
-	this.w = 0;
-	this.h = 0;
-	this.mapData = new Array;
-	this.canvas = null;
-	this.context = null;
-	this.pickIdx = 0;
-	this.selectIdx = 0;
-	this.selectIdxNotify = null;
-	this.tileValue = 0;
-	this.statusBar = null
-	
-	this.finaliseLoad = function( gfx )
-	{
-		this.statusBar = document.getElementById( "status_bar" );
-		this.tileMenu = document.getElementById( "tile_menu" );
-		this.canvas = document.getElementById( "tile_canvas" );
-		this.context  = this.canvas.getContext( '2d' );
-		this.context.mozImageSmoothingEnabled = false; // fix image smoothing on ff
-		
-		var j = ( this.h * this.w );
-		this.mapData[0] = new Array();
-		
-		for( i=0; i<j; ++i )
-		{
-			this.mapData[0][i] = i;
-		}
-		
-		j /= 3;
-		this.tileGraphic = gfx;
-		this.tileMap = new TileMap( this.tileGraphic, 3, j );
-		this.tileMap.setData( this.mapData );
-		
-		this.canvas.width = 3 * this.tileGraphic.tileRealW 
-		this.canvas.height = j * this.tileGraphic.tileRealH 
-		
-		this.viewPort = new ViewPort( 0, 0, 3, j, this.canvas );
-		this.tileMap.refresh();
-		this.show();
-		this.draw();
-		
-		this.canvas.onmousemove		= this.onMouseMove( this );
-		this.canvas.onmouseup		= this.onMouseUp( this );
-		this.tileMenu.onmouseout	= this.onMouseOut( this );
-		
-		this.selectIdx = 0;
-		this.drawSelection();
-
-		// gMenuTab from Menu.js - i dont like this being here
-		// i also dont like using hard coded id values
-		gMenuTab["new_map"].enable( "newMap('new_map_menu','new_map_form')" );
-		gMenuTab["open_map"].enable( "loadMap('load_map_menu','load_map_form')" );
-	}
-	
-	this.draw = function()
-	{
-		this.viewPort.renderMap( this.tileMap, 0 );
-	}
-	
-	this.show = function()
-	{
-		this.tileMenu.style.visibility = 'visible';
-		this.tileMenu.style.display = 'block';
-	}
-	
-	this.hide = function()
-	{
-		this.tileMenu.style.visibility = 'hidden';
-		this.tileMenu.style.display = 'none';
-	}
-	
-	this.onMouseMove = function( inst )
-	{
-		return function( e )
-		{
-			var w = inst.tileMap.gfx.tileW;
-			var h = inst.tileMap.gfx.tileH;
-			
-			var x = e.offsetX;
-			var y = e.offsetY;
-			if( x == undefined )
-			{
-				x = e.layerX;
-				y = e.layerY;
-			}
-			
-			var pnt = new Point2D( x, y );
-			pnt.toTile( w, h );
-			
-			var idx = pnt.asIdx( inst.tileMap.width, inst.tileMap.height );
-			var rct = new Rect2D( pnt.x, pnt.y, w, h );
-			
-			if( idx != inst.pickIdx || inst.refresh )
-			{	
-				var old = new Point2D();
-				old.fromIdx( inst.pickIdx, inst.tileMap.width, inst.tileMap.height );
-				inst.context.clearRect( old.x * w, old.y * h, rct.w, rct.h );
-				inst.tileMap.setDirtyIdx( inst.pickIdx );
-				inst.draw();
-				
-				if( inst.pickIdx == inst.selectIdx )
-				{
-					// re-draw selection indicator
-					inst.drawSelection();
-				}
-				
-				// stroke rect draws outside of the bounds, 
-				// so pull it back in a fe px to fit				
-				inst.context.strokeStyle = "rgba(255,186,60,0.8)";
-				inst.context.strokeRect(rct.getX() * w +1, rct.getY() * h +1, rct.w -2, rct.h -2);
-				
-				inst.pickIdx = idx;
-				inst.refresh = false;
-				inst.statusBar.innerHTML = "<p>Tiles Index: " + idx + "</p>";
-			}
-		}
-	}
-	
-	this.onMouseOut = function( inst )
-	{
-		return function( e )
-		{
-			var w = inst.tileMap.gfx.tileW * inst.viewPort.scale;
-			var h = inst.tileMap.gfx.tileH * inst.viewPort.scale;
-			
-			var old = new Point2D();
-			old.fromIdx( inst.pickIdx, inst.tileMap.width, inst.tileMap.height );
-			inst.context.clearRect( old.x * w, old.y * h, w, h );
-			inst.tileMap.setDirtyIdx( inst.pickIdx );
-			inst.draw();
-			
-			if( inst.pickIdx == inst.selectIdx )
-			{
-				// re-draw selection indicator
-				inst.drawSelection();
-			}
-			
-			// make sure we re-draw the pick indicator properly
-			inst.refresh = true; 
-		}
-	}
-	
-	this.onMouseUp = function( inst )
-	{
-		return function( e )
-		{
-			var w = inst.tileMap.gfx.tileW * inst.viewPort.scale;
-			var h = inst.tileMap.gfx.tileH * inst.viewPort.scale;
-			
-			var old = new Point2D();
-			old.fromIdx( inst.selectIdx, inst.tileMap.width, inst.tileMap.height );
-			inst.context.clearRect( old.x * w, old.y * h, w, h );
-			inst.tileMap.setDirtyIdx( inst.selectIdx );
-				
-			inst.selectIdx = inst.pickIdx;
-			inst.tileValue = inst.mapData[0][inst.selectIdx];
-			inst.tileMap.setDirtyIdx( inst.selectIdx );
-			inst.draw();
-			
-			inst.drawSelection();
-			if( inst.selectIdxNotify )
-			{
-				inst.selectIdxNotify( inst.selectIdx );
-			}
-		}
-	}
-	
-	this.drawSelection = function()
-	{
-		var w = this.tileMap.gfx.tileW * this.viewPort.scale;
-		var h = this.tileMap.gfx.tileH * this.viewPort.scale;
-		var pnt = new Point2D();
-		
-		this.context.strokeStyle = "rgb(247,132,0)";
-		pnt.fromIdx( this.pickIdx, this.tileMap.width, this.tileMap.height );
-		this.context.strokeRect( pnt.x * w +1, pnt.y * h +1, w -2, h -2 );
-	}
-};
-
-
+var gTileData = null;
 function loadTileDefault( select )
 {
-	var thumb = document.getElementById("tile_thumbnail");
-	var val = select.options[select.selectedIndex].value;
-	thumb.src = "img/" + val + "_thumb.png";
+	var idx = parseInt( select.selectedIndex );
+	if( !isNaN( idx ) )
+	{
+		gTileData = gDefaultTiles[idx];
+		
+		var thumb = document.getElementById("tile_thumbnail");
+		thumb.src = gTileData.thumb;
+		
+		var detail = document.getElementById("tile_details");
+		detail.innerHTML = gTileData.details;
+	}
+	else
+	{
+		gTileData = null;
+	}
 }
 
 var gTileBrowser = null;
@@ -257,27 +84,16 @@ function loadTileSheet( menu, form )
 							reader.readAsDataURL( file ); 
 						}
 					}
+					else if( gTileData )
+					{
+						close();
+						doLoadTileSheet( gTileData.w, gTileData.h, true, gTileData.image ); 
+					}
 					else
 					{
-						var select = formRoot.elements['defaults'];
-						switch( select.options[select.selectedIndex].value )
-						{
-							case "default_tiles_1":
-								close();
-								doLoadTileSheet( 39, 1, false, "img/default_tiles_1.png" ); 
-								break;
-								
-							case "default_tiles_2":
-								close();
-								doLoadTileSheet( 6, 6, false, "img/default_tiles_2.png" );
-								break;
-								
-							default:
-								showInfo("info_menu", "info_form", 
-								"Sorry, Invalid Input: width=" + formRoot.elements["width"].value + 
-								" and height=" + formRoot.elements["height"].value );
-						}
-						return;
+						showInfo("info_menu", "info_form", 
+							"Sorry, Invalid Input: width=" + formRoot.elements["width"].value + 
+							" and height=" + formRoot.elements["height"].value );
 					}
 				};
 			}
@@ -316,333 +132,6 @@ function doLoadTileSheet( w, h, pix, url, cb )
 			}
 		}
 		img.src = url;
-	}
-}
-
-
-// -- main map object ----------------------------------------------
-function Mapper() 
-{
-	this.viewPort = null;
-	this.tileGraphic = null;
-	this.tileMap = null;
-	this.w = 0;
-	this.h = 0;
-	this.mapData = new Array;
-	this.layerNames = new Array;
-	this.canvas = null;
-	this.context = null;
-	this.pickIdx = 0;
-	this.doPaint = false;
-	this.activeLayer = 0;
-	this.statusBar = null;
-	
-	this.doMultiSelect = false;
-	this.multiSelectRect = new Rect2D( 0, 0, 0, 0 );
-	
-	this.setZoom = function( zoom )
-	{
-		this.canvas.width  = this.w * this.tileGraphic.tileRealW * zoom;
-		this.canvas.height = this.h * this.tileGraphic.tileRealH * zoom;
-		this.viewPort.scale = zoom;
-		this.tileMap.refresh();
-		this.viewPort.clear();
-		this.draw();
-	}
-
-	this.addLayer = function( name )
-	{
-		var j = ( this.h * this.w );
-		var l = this.mapData.length;
-		this.mapData[l] = new Array();
-		this.layerNames[l] = name;
-		for( var i=0; i<j; ++i )
-		{
-			this.mapData[l][i] = 0;
-		}
-	}
-	
-	this.delLayer = function()
-	{
-		var j = this.mapData.length-1;
-		for( var i=this.activeLayer; i<j; ++i )
-		{
-			this.mapData[i] = this.mapData[i+1];
-			this.layerNames[i] = this.layerNames[i+1];
-		}
-		this.mapData.length = j;
-		this.layerNames.length = j;
-		this.setActiveLayer( 0 );
-	}
-	
-	this.setActiveLayer = function( layer )
-	{
-		this.activeLayer = layer;
-		this.tileMap.refresh();
-		this.draw();
-	}
-	
-	this.setup = function( w, h, old )
-	{
-		this.statusBar = document.getElementById( "status_bar" );
-		this.canvas = document.getElementById( "map_canvas" );
-		
-		this.context  = this.canvas.getContext( '2d' );
-		this.context.mozImageSmoothingEnabled = false; // fix image smoothing on ff
-		
-		this.viewPort = new ViewPort( 0, 0, w, h, this.canvas );
-		this.w = w;
-		this.h = h;
-		
-		if( old )
-		{
-			this.viewPort.scale = old.viewPort.scale;
-			
-			var tH = Math.min( old.h, h );
-			var tW = Math.min( old.w, w );
-			var tZ = old.mapData.length;
-			for( var z=0; z<tZ; ++z )
-			{
-				this.layerNames[z] = old.layerNames[z];
-				this.mapData[z] = new Array();
-			}
-			
-			for( var z=0; z<tZ; ++z )
-			{
-				for( var y=0; y<h; ++y )
-				{
-					for( var x=0; x<w; ++x )
-					{
-						if( y >= tH || x >= tW )
-						{
-							this.mapData[z][x + y * w] = 0;
-						}
-						else
-						{
-							this.mapData[z][x + y * w] = old.mapData[z][x + y * old.w];
-						}
-					}
-				}
-			}
-		}
-		else
-		{
-			var j = ( h * w );
-			this.mapData[0] = new Array();
-			this.layerNames[0] = "Base Layer";
-			for( i=0; i<j; ++i )
-			{
-				this.mapData[0][i] = 0;
-			}
-		}
-		
-		this.tileGraphic = gTileBrowser.tileGraphic;
-		this.tileMap = new TileMap( this.tileGraphic, w, h );
-		this.tileMap.setData( this.mapData );
-		
-		this.canvas.width		= w * this.tileGraphic.tileRealW * this.viewPort.scale;
-		this.canvas.height		= h * this.tileGraphic.tileRealH * this.viewPort.scale;
-		this.canvas.onmouseout	= this.onMouseOut( this );
-		this.canvas.onmousemove	= this.onMouseMove( this );
-		this.canvas.onmousedown	= this.onMouseDown( this );
-		this.canvas.onmouseup	= this.onMouseUp( this );
-		
-		this.tileMap.refresh();
-		this.draw();
-		
-		gMenuTab["resize_map"].enable( "resizeMap('resize_map_menu','resize_map_form')" );
-		gMenuTab["save_map"].enable( "showMapData('map_data_menu','map_data_form')" );
-		gMenuTab["new_layer"].enable( "makeNewLayer('new_layer_menu','new_layer_form')" );
-		gMenuTab["zoom"].enable( null );
-		gMenuTab["layer_select"].enable( null );
-	}
-	
-	this.draw = function()
-	{
-		this.viewPort.renderMap( this.tileMap, this.activeLayer );
-	}
-	
-	this.drawSelectRect = function( x, y, w, h )
-	{
-		// stroke rect draws outside of the bounds, 
-		// so pull it back in a few px to fit
-		this.context.strokeStyle = "rgba(255,186,60,0.8)";
-		this.context.strokeRect( x*w+1, y*h+1, w-2, h-2 );
-	}
-	
-	this.singleSelect = function( x, y, w, h )
-	{
-		var pnt = new Point2D( x, y );
-		pnt.toTile( w, h );
-		
-		var idx = pnt.asIdx( this.tileMap.width, this.tileMap.height );
-		var rct = new Rect2D( pnt.x, pnt.y, w, h );
-		
-		if( idx != this.pickIdx || this.refresh )
-		{	
-			if( this.doPaint )
-			{
-				this.mapData[this.activeLayer][idx] = gTileBrowser.tileValue;
-				this.tileMap.setDirtyIdx( idx );
-			}
-			
-			var old = new Point2D();
-			old.fromIdx( this.pickIdx, this.tileMap.width, this.tileMap.height );
-			this.context.clearRect( old.x * w, old.y * h, rct.w, rct.h );
-			this.tileMap.setDirtyIdx( this.pickIdx );
-			this.draw();
-			
-			this.drawSelectRect( rct.getX(), rct.getY(), rct.w, rct.h );
-			
-			this.pickIdx = idx;
-			this.refresh = false;
-			
-			var val = this.mapData[this.activeLayer][idx];
-			this.statusBar.innerHTML = "<p>Tile Index: " + idx + " Value: " + val + " (Active Layer)</p>";
-		}
-	}
-	
-	this.multiSelect = function( x, y, w, h )
-	{
-		this.draw();
-		var point = new Point2D( x, y );
-		point.toTile( this.tileGraphic.tileW, this.tileGraphic.tileH );
-		point.x++;
-		point.y++;
-		
-		var sIdx = this.multiSelectRect.point.asIdx( this.tileMap.width, this.tileMap.height );
-		var eIdx = point.asIdx( this.tileMap.width, this.tileMap.height );
-		for( var i=sIdx; i<eIdx; ++i )
-		{
-			this.tileMap.setDirtyIdx( i );
-		}
-		
-		var nx = this.multiSelectRect.getX() * this.tileGraphic.tileW;
-		var ny = this.multiSelectRect.getY() * this.tileGraphic.tileH;
-		var nw = Math.max( point.x * this.tileGraphic.tileW - nx, 0 );
-		var nh = Math.max( point.y * this.tileGraphic.tileH - ny, 0 ); 
-		
-		//this.multiSelectRect.w = nw;
-		//this.multiSelectRect.h = nh;
-		this.draw();
-		this.context.strokeStyle = "rgba(255,186,60,0.8)";
-		this.context.fillStyle = "rgba(255,186,60,0.3)";
-		this.context.strokeRect( nx+2, ny+2, nw-3, nh-3 );
-		this.context.fillRect( nx, ny, nw, nh );
-		
-		this.statusBar.innerHTML = "<p>Select: " + sIdx + " to " + eIdx + " (Active Layer)</p>";
-	}
-	
-	this.onMouseMove = function( inst )
-	{
-		return function( e )
-		{
-			var w = inst.tileMap.gfx.tileW * inst.viewPort.scale;
-			var h = inst.tileMap.gfx.tileH * inst.viewPort.scale;
-			
-			var x = e.offsetX;
-			var y = e.offsetY;
-			if( x == undefined )
-			{
-				x = e.layerX;
-				y = e.layerY;
-			}
-			
-			if( inst.doMultiSelect )
-			{
-				inst.multiSelect( x, y, w, h );
-			}
-			else
-			{
-				inst.singleSelect( x, y, w, h );
-			}
-		}
-	}
-	
-	this.onMouseDown = function( inst )
-	{
-		return function( e )
-		{
-			// - try and stop right btn context menu --
-			if( e.stopPropagation )
-			{
-				e.stopPropagation();
-			}
-			if( e.preventDefault )
-			{
-				e.preventDefault();
-			}
-			e.cancelBubble = true;
-			// --------------------------------------
-			
-			// TODO: clean this up a bit ...
-			if( gCtrlDown )
-			{
-				var x = e.offsetX;
-				var y = e.offsetY;
-				if( x == undefined )
-				{
-					x = e.layerX;
-					y = e.layerY;
-				}
-				
-				inst.doMultiSelect = true;
-				inst.multiSelectRect.set( x, y, 0, 0 );
-				inst.multiSelectRect.point.toTile( inst.tileGraphic.tileW, 
-												   inst.tileGraphic.tileH );
-			}
-			else
-			{
-				inst.doPaint = true;
-				inst.tileMap.setDirtyIdx( inst.pickIdx );
-			
-				if( e.button == 0 ) // left click
-				{
-					inst.mapData[inst.activeLayer][inst.pickIdx] = gTileBrowser.tileValue;
-				}
-				else if( e.button == 2 ) // right click
-				{
-					inst.mapData[inst.activeLayer][inst.pickIdx] = 0;
-				}
-				
-				inst.draw();
-				var pnt = new Point2D();
-				var w = inst.tileMap.gfx.tileW * inst.viewPort.scale;
-				var h = inst.tileMap.gfx.tileH * inst.viewPort.scale;
-				
-				pnt.fromIdx( inst.pickIdx, inst.tileMap.width, inst.height );
-				inst.drawSelectRect( pnt.x, pnt.y, w, h );
-			}
-			return false;
-		}
-	}
-	
-	this.onMouseUp = function( inst )
-	{
-		return function( e )
-		{
-			inst.doPaint = false;
-			inst.doMultiSelect = false;
-		}
-	}
-	
-	this.onMouseOut = function( inst )
-	{
-		return function( e )
-		{
-			var w = inst.tileMap.gfx.tileW * inst.viewPort.scale;
-			var h = inst.tileMap.gfx.tileH * inst.viewPort.scale;
-			
-			var old = new Point2D();
-			old.fromIdx( inst.pickIdx, inst.tileMap.width, inst.tileMap.height );
-			inst.context.clearRect( old.x * w, old.y * h, w, h );
-			inst.tileMap.setDirtyIdx( inst.pickIdx );
-			inst.draw();
-			
-			inst.doMultiSelect = false;
-			inst.doPaint = false;
-			inst.refresh = true;
-		}
 	}
 }
 
@@ -702,7 +191,7 @@ function newMap( menu, form )
 
 function doNewMap( w, h )
 {
-	gMapper = new Mapper();
+	gMapper = new TileMapper();
 	gMapper.setup( w, h );
 }
 
@@ -861,7 +350,7 @@ function resizeMap( menu, form )
 		
 		if( !isNaN( w ) && !isNaN( h ) )
 		{
-			var newMap = new Mapper();
+			var newMap = new TileMapper();
 			newMap.setup( w, h, gMapper );
 			gMapper = newMap;
 
@@ -975,7 +464,7 @@ function doLoadMapData( arr, prefixSize, addLayers, layerNames )
 		
 		if( !gMapper )
 		{
-			gMapper = new Mapper();
+			gMapper = new TileMapper();
 			gMapper.setup( w, h );
 		}
 	}
@@ -1135,3 +624,38 @@ function setZoom( idx )
 		gMapper.setZoom( zooms[idx] );
 	}
 }
+
+function toggleMultiSelect()
+{
+	// HACK: directly setting multi_select icon is a hack :-(
+	// we are doing it to indicate mode toggle.
+	
+	if( !gMapper.multiSelectMode )
+	{
+		gMenuTab[ "multi_select" ].iconDisSrc = "img/select-dis.png";
+		gMenuTab[ "multi_select" ].iconSrc = "img/select.png";
+		gMenuTab[ "multi_select" ].enable( "toggleMultiSelect()" );
+		gMapper.statusBar.innerHTML = "<p>Multi Select Mode</p>";
+		
+		gMenuTab[ "fill" ].enable( "gMapper.fillMultiSelection()" );
+		
+		//gMenuTab[ "detail_fill" ].enable( null );
+		gMenuTab[ "erase_fill" ].enable( "gMapper.eraseMultiSelection()" );
+		gMapper.multiSelectMode = true;
+	}
+	else
+	{
+		gMenuTab[ "multi_select" ].iconDisSrc = "img/pointer-dis.png";
+		gMenuTab[ "multi_select" ].iconSrc = "img/pointer.png";
+		gMenuTab[ "multi_select" ].enable( "toggleMultiSelect()" );
+		gMapper.statusBar.innerHTML = "<p>Single Select Mode</p>";
+		
+		gMenuTab[ "fill" ].disable();
+		
+		//gMenuTab[ "detail_fill" ].disable();
+		gMenuTab[ "erase_fill" ].disable();
+		gMapper.multiSelectMode = false;
+		gMapper.clearMultiSelection();
+	}
+}
+

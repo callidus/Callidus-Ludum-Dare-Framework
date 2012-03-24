@@ -16,6 +16,12 @@ function Point2D( x, y )
 	this.x = x;
 	this.y = y;
 	
+	this.set = function( x, y )
+	{
+		this.x = x;
+		this.y = y;
+	}
+	
 	// convert XY point into an index
 	this.asIdx = function( w, h )
 	{
@@ -76,6 +82,16 @@ function Rect2D( x, y, w, h )
 	this.getY = function()
 	{
 		return this.point.y;
+	}
+	
+	this.setX = function( x )
+	{
+		this.point.x = x;
+	}
+	
+	this.setY = function( y )
+	{
+		this.point.y = y;
 	}
 	
 	this.getExtent = function()

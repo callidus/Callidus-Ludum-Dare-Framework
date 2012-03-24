@@ -82,7 +82,10 @@ function initMenu( id, btn )
 		'save_layer_as' : document.getElementById('save_layer_as'),
 		'delete_layer' : document.getElementById('delete_layer'),
 		'fill' : document.getElementById('fill'),
-		'detail_fill' : document.getElementById('detail_fill') };
+		'detail_fill' : document.getElementById('detail_fill'),
+		'multi_select' : document.getElementById('multi_select'),
+		'erase_fill' : document.getElementById('erase_fill')
+		};
 	
 	// setup all menu items
 	for( var key in gMenuTab )

@@ -15,6 +15,9 @@ please see licence.txt
 		<script type="text/javascript" language="javascript" src="js/TileUtils.js"></script>
 		<script type="text/javascript" language="javascript" src="js/ViewPort.js"></script>
 		
+		<script type="text/javascript" language="javascript" src="js/DefaultTileData.js"></script>
+		<script type="text/javascript" language="javascript" src="js/TileBrowser.js"></script>
+		<script type="text/javascript" language="javascript" src="js/TileMapper.js"></script>
 		<script type="text/javascript" language="javascript" src="js/Menu.js"></script>
 		<script type="text/javascript" language="javascript" src="js/Body.js"></script>
 		<script type="text/javascript" language="javascript" src="js/Intro.js"></script>
@@ -90,11 +93,17 @@ please see licence.txt
 							</div>
 						</div>
 						<div class="form_box">
-							<div id="fill" title="Fill" class="button disabled" onClick="newMap(this.form)">
-								<img id="fill_img" src="img/image-missing.png"/>
+							<div id="multi_select" title="Mulit Select Mode" class="button disabled">
+								<img id="multi_select_img" src="img/pointer.png"/>
 							</div>
-							<div id="detail_fill" title="Detail Fill" class="button disabled" onClick="newMap(this.form)">
-								<img id="detail_fill_img" src="img/image-missing.png"/>
+							<div id="fill" title="Fill Selection" class="button disabled">
+								<img id="fill_img" src="img/bucketfill.png"/>
+							</div>
+							<!-- div id="detail_fill" title="Detail Fill Selection" class="button disabled">
+								<img id="detail_fill_img" src="img/bucketfill.png"/>
+							</div -->
+							<div id="erase_fill" title="Erase Selection" class="button disabled">
+								<img id="erase_fill_img" src="img/eraser.png"/>
 							</div>
 						</div>
 						<div class="form_box">
@@ -186,10 +195,12 @@ please see licence.txt
 							</div>
 							<p>Or try a default:</p>
 							<select name="defaults" class="selecta" onChange="loadTileDefault(this)">
-								<option value="question_mark">None</option>
-								<option value="default_tiles_1">Default 1</option>
-								<option value="default_tiles_2">Default 2</option>
+								<option value="0">None</option>
+								<option value="1">Default 1</option>
+								<option value="2">Default 2</option>
+								<option value="3">Eight 2 Empire</option>
 							</select>
+							<div id="tile_details" style="clear: left; padding-top: 5px;"></div>
 						</div>
 						<div class="clear"></div>
 						<hr>
