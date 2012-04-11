@@ -637,8 +637,8 @@ function toggleMultiSelect()
 		gMenuTab[ "multi_select" ].enable( "toggleMultiSelect()" );
 		gMapper.statusBar.innerHTML = "<p>Multi Select Mode</p>";
 		
+		gMenuTab[ "copy" ].enable( "gMapper.copyMultiSelection()" );
 		gMenuTab[ "fill" ].enable( "gMapper.fillMultiSelection()" );
-		
 		//gMenuTab[ "detail_fill" ].enable( null );
 		gMenuTab[ "erase_fill" ].enable( "gMapper.eraseMultiSelection()" );
 		gMapper.multiSelectMode = true;
@@ -650,8 +650,9 @@ function toggleMultiSelect()
 		gMenuTab[ "multi_select" ].enable( "toggleMultiSelect()" );
 		gMapper.statusBar.innerHTML = "<p>Single Select Mode</p>";
 		
+		gMenuTab[ "copy" ].disable();
+		gMenuTab[ "paste" ].disable();
 		gMenuTab[ "fill" ].disable();
-		
 		//gMenuTab[ "detail_fill" ].disable();
 		gMenuTab[ "erase_fill" ].disable();
 		gMapper.multiSelectMode = false;

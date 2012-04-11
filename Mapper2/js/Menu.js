@@ -84,7 +84,9 @@ function initMenu( id, btn )
 		'fill' : document.getElementById('fill'),
 		'detail_fill' : document.getElementById('detail_fill'),
 		'multi_select' : document.getElementById('multi_select'),
-		'erase_fill' : document.getElementById('erase_fill')
+		'erase_fill' : document.getElementById('erase_fill'),
+		'copy' : document.getElementById('copy'),
+		'paste' : document.getElementById('paste')
 		};
 	
 	// setup all menu items

@@ -21,6 +21,10 @@ function TileMapper()
 	this.multiSelectStart = new Point2D( 0, 0 );
 	this.multiSelectEnd = new Point2D( 0, 0 );
 	
+	this.copyBuffer = null;
+	this.copyW = 0;
+	this.copyH = 0;
+	
 	this.cacheTileW = 0;
 	this.cacheTileH = 0;
 	
@@ -269,6 +273,54 @@ function TileMapper()
 			}
 		}
 		
+		this.draw();
+	}
+	
+	this.copyMultiSelection = function()
+	{
+		var maxX = this.multiSelectRect.point.x + this.multiSelectRect.w;
+		var maxY = this.multiSelectRect.point.y + this.multiSelectRect.h;		
+		
+		this.copyBuffer = new Array( this.multiSelectRect.w * this.multiSelectRect.h );
+		this.copyW = this.multiSelectRect.w
+		this.copyH = this.multiSelectRect.h;
+		
+		for( var y=this.multiSelectRect.point.y; y<maxY; ++y )
+		{
+			for( var x=this.multiSelectRect.point.x; x<maxX; ++x )
+			{
+				var mapIdx = y * this.tileMap.width + x;
+				var bufIdx = ( y - this.multiSelectRect.point.y ) * 
+								this.multiSelectRect.w + x - 
+								this.multiSelectRect.point.x;
+								
+				this.copyBuffer[bufIdx] = this.mapData[this.activeLayer][mapIdx];
+			}
+		}
+		
+		gMenuTab["paste"].enable( "gMapper.pasteMultiSelection()" );
+	}
+	
+	this.pasteMultiSelection = function()
+	{
+		var maxW = Math.min( this.multiSelectRect.w, this.copyW );
+		var maxH = Math.min( this.multiSelectRect.h, this.copyH );
+							 
+		var maxX = this.multiSelectRect.point.x + maxW;
+		var maxY = this.multiSelectRect.point.y + maxH;
+		
+		for( var y=this.multiSelectRect.point.y; y<maxY; ++y )
+		{
+			for( var x=this.multiSelectRect.point.x; x<maxX; ++x )
+			{
+				var mapIdx = y * this.tileMap.width + x;
+				var bufIdx = ( y - this.multiSelectRect.point.y ) * 
+								this.copyW + x - this.multiSelectRect.point.x;
+								
+				this.mapData[this.activeLayer][mapIdx] = this.copyBuffer[bufIdx];
+				this.tileMap.setDirtyIdx( mapIdx );
+			}
+		}
 		this.draw();
 	}
 	
